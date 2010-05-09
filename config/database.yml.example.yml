@@ -1,0 +1,50 @@
+mysql1: &using
+ adapter: mysql
+ host: twork.taobao.net
+ password: 20091001
+ database: twork_production
+ username: sa
+ encoding: utf8  
+mysql: &using
+  adapter: mysql
+  host: 127.0.0.1
+  password: 
+  database: twork_development
+  username: root
+  encoding: utf8
+development:
+ <<: *using
+production:
+ database: twork_development
+ <<: *using        
+redmine:            
+ adapter: mysql
+ host: dev.twork.taobao.net
+ password: auto
+ database: redmine
+ username: auto
+ encoding: utf8  
+test:
+ database: twork_test
+ <<: *using
+qc_admin:
+  adapter: oracle
+  database: qcsite
+  host: ""
+  password: tdtdtd
+  username: qc_db
+  encoding: utf8
+qc_user:
+  adapter: oracle
+  database: qcsite
+  host: ""
+  password: qcuser
+  username: qcuser
+  encoding: utf8
+db_platform:
+ adapter: mysql
+ host: 192.168.210.2
+ password: wenlang
+ database: phr
+ username: wenlang
+ encoding: utf8

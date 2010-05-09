@@ -1,0 +1,18 @@
+<h1>Listing pm_folders</h1>
+
+<table>
+  <tr>
+  </tr>
+
+<% @pm_folders.each do |pm_folder| %>
+  <tr>
+    <td><%= link_to 'Show', pm_folder %></td>
+    <td><%= link_to 'Edit', edit_pm_folder_path(pm_folder) %></td>
+    <td><%= link_to 'Destroy', pm_folder, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New pm_folder', new_pm_folder_path %>

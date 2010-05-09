@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title><%=h html_title %></title>
+<% @named_object = @project||@product_line %>
+
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+<%= stylesheet_link_tag 'application','facebox', :media => 'all' %>
+<%= javascript_include_tag  'prototype', 'effects', 
+													  'dragdrop', 'controls',
+													  'application'>
+
+<!--[if IE]>
+    <style type="text/css">
+      * html body{ width: expression( document.documentElement.clientWidth < 900 ? '900px' : '100%' ); }
+      body {behavior: url(<%= stylesheet_path "csshover.htc" %>);}
+    </style>
+<![endif]-->
+
+<%= yield :header_tags %>
+</head>
+
+
+<% if local_assigns.has_key? :popup %>
+<div id="wrapper" class="popup">
+<% else %>
+<div id="wrapper">
+<% end %>  
+	<%= tag('div', {:id => 'main', :class => (has_content?(:sidebar) ? '' : 'nosidebar')}, true) %>
