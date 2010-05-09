@@ -2,12 +2,13 @@
 
 <table>
   <tr>
+	 <td>名称</td>             
+    <td></td>  
   </tr>
 
 <% @pm_libs.each do |pm_lib| %>
   <tr>
-    <td><%= link_to 'Show', pm_lib %></td>
-    <td><%= link_to 'Edit', edit_pm_lib_path(pm_lib) %></td>
+    <td><%= link_to pm_lib.name, pm_lib %></td>             
     <td><%= link_to 'Destroy', pm_lib, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>

@@ -1,0 +1,10 @@
+<% unless params[:facebox] %>  
+	<script type="text/javascript" charset="utf-8">
+		jQuery.noConflict();
+	 jQuery(document).ready(function($) {
+	   $('a[rel*=facebox]').facebox() 
+	 })
+	</script>
+<% end %>
+
+<%= yield %>            

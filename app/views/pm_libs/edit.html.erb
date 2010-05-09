@@ -1,8 +1,7 @@
 <h1>Editing pm_lib</h1>
 
-<% form_for(@pm_lib) do |f| %>
-  <%= f.error_messages %>
-
+<% form_for(@pm_lib) do |f| %>         
+	<%= render :partial => 'form', :locals => {:f => f} %> 
   <p>
     <%= f.submit 'Update' %>
   </p>

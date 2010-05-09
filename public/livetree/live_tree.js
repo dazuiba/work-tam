@@ -102,7 +102,7 @@ LiveTree.prototype._getCollapsedItemIconHtml = function (item) {
     if (this.collapsedItemIconHtml != null) {
         return this.collapsedItemIconHtml;
     } else {
-        return '<img src="/images/live_tree_transparent_pixel.gif" alt="&gt;" id="' + this.id + '_item_icon_' + this._escapeId(item.id) + '" class="' + this._getClass("item_icon") + ' ' + this._getClass("branch_collapsed_icon") + '" />';
+        return '<img src="/livetree/live_tree_transparent_pixel.gif" alt="&gt;" id="' + this.id + '_item_icon_' + this._escapeId(item.id) + '" class="' + this._getClass("item_icon") + ' ' + this._getClass("branch_collapsed_icon") + '" />';
     }
 }
 
@@ -110,7 +110,7 @@ LiveTree.prototype._getExpandedItemIconHtml = function (item) {
     if (this.expandedItemIconHtml != null) {
         return this.expandedItemIconHtml;
     } else {
-        return '<img src="/images/live_tree_transparent_pixel.gif" alt="v" id="' + this.id + '_item_icon_' + this._escapeId(item.id) + '" class="' + this._getClass("item_icon") + ' ' + this._getClass("branch_expanded_icon") + '" />';
+        return '<img src="/livetree/live_tree_transparent_pixel.gif" alt="v" id="' + this.id + '_item_icon_' + this._escapeId(item.id) + '" class="' + this._getClass("item_icon") + ' ' + this._getClass("branch_expanded_icon") + '" />';
     }
 }
 
@@ -118,7 +118,7 @@ LiveTree.prototype._getLeafIconHtml = function (item) {
     if (this.leafIconHtml != null) {
         return this.leafIconHtml;
     } else {
-        return '<img src="/images/live_tree_transparent_pixel.gif" alt=" " id="' + this.id + '_item_icon_' + this._escapeId(item.id) + '" class="' + this._getClass("item_icon") + ' ' + this._getClass("leaf_icon") + '" />';
+        return '<img src="/livetree/live_tree_transparent_pixel.gif" alt=" " id="' + this.id + '_item_icon_' + this._escapeId(item.id) + '" class="' + this._getClass("item_icon") + ' ' + this._getClass("leaf_icon") + '" />';
     }
 }
 
@@ -126,7 +126,7 @@ LiveTree.prototype._getLoadingIconHtml = function () {
     if (this.loadingIconHtml != null) {
         return this.loadingIconHtml;
     } else {
-        return '<img src="/images/live_tree_loading_spinner.gif" alt="[loading]" class="' + this._getClass("loading_icon") + '" />';
+        return '<img src="/livetree/live_tree_loading_spinner.gif" alt="[loading]" class="' + this._getClass("loading_icon") + '" />';
     }
 }
 

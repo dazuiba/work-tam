@@ -1,0 +1,25 @@
+<%= render :partial => "layouts/top", :locals=>{:hide_top=>true} %>
+	<% if !request.xhr? %>
+		<div id="top-menu">
+			<ul>
+				<li><a href="javascript:history.back()">后退</a></li>
+				<li><a href="javascript:history.forward()">前进</li>	
+				<li><a href="javascript:location.reload()">刷新</li>
+				<% if controller.class.to_s=~/^Auto/ %>
+				<li> <%= link_to "后台管理", "/admin/projects/" %> </li>
+				<% end %>
+			
+				<li style="padding-left:230px;">
+					欢迎：<%= User.current.nickname %>
+				</li>
+			</ul>	
+		</div>       
+	<% end %>
+  <div id="content">
+		<%= render_flash_messages %>
+    <%= yield %>
+  </div>
+  <div id="sidebar">        
+      <%= yield :sidebar %>
+  </div>
+<%= render :partial => "layouts/foot" %>

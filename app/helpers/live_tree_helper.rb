@@ -57,7 +57,7 @@ module LiveTreeHelper
    end
 
    def LiveTreeHelper.live_tree_js_name(name) #:nodoc:
-      Inflector.camelize(name).sub(/^(.)/) { |s| $1.downcase }
+      ActiveSupport::Inflector.camelize(name).sub(/^(.)/) { |s| $1.downcase }
    end
 
    def live_tree(name, options = {})

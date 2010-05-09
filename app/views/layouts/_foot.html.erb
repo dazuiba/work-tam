@@ -1,7 +1,7 @@
 </div>
 
 <div id="ajax-indicator" style="display:none;"><span><%= l(:label_loading) %></span></div>
-<% if !local_assigns.has_key? :popup  %>	
+<% if !request.xhr? %>
 	<div id="footer">
 	    Powered by tWork Team &copy; 2009-2010 Taobao QA Team
 	    <a id="questions" style="color:green; padding-left:10px;">值班小二：云梦 <%= link_to_wangwang "云梦" %></a>			

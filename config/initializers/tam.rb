@@ -4,6 +4,15 @@ require "acts/active_record/tree"
 require "acts/controller/live_tree"   
 require "extensions/all"
 
-ActiveRecord::Base.extend Acts::ActiveRecord::List  
-ActiveRecord::Base.extend Acts::ActiveRecord::Tree
-ActionController::Base.extend Acts::Controller::LiveTree
+ActiveRecord::Base.send :include,  Acts::ActiveRecord::List  
+ActiveRecord::Base.send :include,  Acts::ActiveRecord::Tree
+ActionController::Base.send :include, Acts::Controller::LiveTree
+                   
+
+GLoc.set_config :default_language => :zh
+GLoc.clear_strings
+GLoc.set_kcode
+GLoc.load_localized_strings
+GLoc.set_config(:raise_string_not_found_errors => false)
+include GLoc
+Time::DATE_FORMATS[:stamp] = '%y%m%d%H%M%S'

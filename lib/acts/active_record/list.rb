@@ -51,7 +51,7 @@ module Acts #:nodoc:
           end
 
           class_eval <<-EOV
-            include ActiveRecord::Acts::List::InstanceMethods
+            include Acts::ActiveRecord::List::InstanceMethods
 
             def acts_as_list_class
               ::#{self.name}

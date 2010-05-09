@@ -1,3 +1,12 @@
-
-<%= link_to 'Edit', edit_pm_folder_path(@pm_folder) %> |
-<%= link_to 'Back', pm_folders_path %>
+<%
+	links =  @pm_folder.ancestors.map{|e|link_to(e.name, pm_lib_pm_folder(e))}      
+	links << @pm_folder.name
+%>
+<div> 
+	 current folder:   
+	<%= breadcrumb  links %> 
+                                                                                      
+</div>
+	
+<%= link_to_popup 'Add Folder', edit_pm_folder_path(@pm_folder) %> |
+<%= link_to_popup 'Add PageModel', pm_folders_path %>

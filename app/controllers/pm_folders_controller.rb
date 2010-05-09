@@ -2,12 +2,8 @@ class PmFoldersController < ApplicationController
   # GET /pm_folders
   # GET /pm_folders.xml
   def index
-    @pm_folders = PmFolder.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @pm_folders }
-    end
+    @pm_lib = PmLib.find(params[:pm_lib_id])
+    @folder_root = @pm_lib.folder_root
   end
 
   # GET /pm_folders/1
