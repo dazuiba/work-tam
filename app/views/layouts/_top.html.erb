@@ -31,4 +31,20 @@
 <% else %>
 <div id="wrapper">
 <% end %>  
-	<%= tag('div', {:id => 'main', :class => (has_content?(:sidebar) ? '' : 'nosidebar')}, true) %>
+	<%= tag('div', {:id => 'main', :class => (has_content?(:sidebar) ? '' : 'nosidebar')}, true) %>  
+	<% if !request.xhr? %>
+		<div id="top-menu">
+			<ul>
+        <li><a href="javascript:history.back()">后退</a></li>
+        <li><a href="javascript:history.forward()">前进</li>	
+        <li><a href="javascript:location.reload()">刷新</a></li>
+				<% if controller.class.to_s=~/^Auto/ %>
+				<li> <%= link_to "后台管理", "/admin/projects/" %> </li>
+				<% end %>
+			
+				<li style="padding-left:230px;">
+					欢迎：<%= User.current.nickname %>
+				</li>
+			</ul>	
+		</div>       
+	<% end %>

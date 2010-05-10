@@ -14,6 +14,7 @@ class CreatePmModels < ActiveRecord::Migration
     create_table "pm_models" do |t|
       t.string   "name"
       t.string   "title"
+      t.integer  "pm_folder_id"
       t.text     :properties
       t.datetime "created_at"
       t.datetime "updated_at"
@@ -24,6 +25,7 @@ class CreatePmModels < ActiveRecord::Migration
       t.string   "title"
       t.integer  "parent_id"
       t.integer  "pm_lib_id"
+      t.boolean  "leaf", :default => nil
       t.datetime "created_at"
       t.datetime "updated_at"
     end

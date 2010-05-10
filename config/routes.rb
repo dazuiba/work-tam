@@ -1,10 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :pm_libs do |lib|
     lib.resources :pm_folders
-  end
-
-  map.resources :pm_folders
-
+  end                         
+  map.resources :pm_folders, :collection=>["folder_live_tree_data"]
   map.resources :pm_models
 
   # The priority is based upon order of creation: first created -> highest priority.

@@ -1,19 +1,24 @@
 class PmFoldersController < ApplicationController
   # GET /pm_folders
-  # GET /pm_folders.xml
+  # GET /pm_folders.xml                         
+  
+  live_tree :folder, :model => :pm_folder
   def index
     @pm_lib = PmLib.find(params[:pm_lib_id])
     @folder_root = @pm_lib.folder_root
+    redirect_to :action => "show", :id => @folder_root.id
   end
 
   # GET /pm_folders/1
   # GET /pm_folders/1.xml
   def show
-    @pm_folder = PmFolder.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @pm_folder }
+    @pm_folder = PmFolder.find(params[:id])  
+    @pm_lib = @pm_folder.pm_lib
+    
+    @folder_root = @pm_lib.folder_root 
+    if request.xhr?
+      render :partial => "show"
+    else
     end
   end
 
@@ -21,6 +26,7 @@ class PmFoldersController < ApplicationController
   # GET /pm_folders/new.xml
   def new
     @pm_folder = PmFolder.new
+    @pm_folder.parent = PmFolder.find(params[:parent_id]) if params[:parent_id]
 
     respond_to do |format|
       format.html # new.html.erb
@@ -36,8 +42,8 @@ class PmFoldersController < ApplicationController
   # POST /pm_folders
   # POST /pm_folders.xml
   def create
-    @pm_folder = PmFolder.new(params[:pm_folder])
-
+    @pm_folder = PmFolder.new(params[:pm_folder])  
+    @pm_folder.pm_lib = @pm_folder.parent.pm_lib
     respond_to do |format|
       if @pm_folder.save
         flash[:notice] = 'PmFolder was successfully created.'

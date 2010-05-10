@@ -31,7 +31,7 @@ module Acts #:nodoc:
           end
        end  
        
-       class InstanceMethods  
+       module InstanceMethods  
        
          def setup_item_type_tree(check_get=false)
         	  return if check_get&&!request.get?
@@ -51,4 +51,4 @@ module Acts #:nodoc:
        
     end
    end
-end     
+end

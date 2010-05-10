@@ -27,7 +27,7 @@ class PmModelsController < ApplicationController
   # GET /pm_models/new
   # GET /pm_models/new.xml
   def new
-    @pm_model = PmModel.new
+    @pm_model = PmModel.new(params[:pm_model])
 
     respond_to do |format|
       format.html # new.html.erb

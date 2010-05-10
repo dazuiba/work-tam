@@ -1,7 +1,7 @@
 class PmElementsController < ApplicationController
 
-  live_tree :pm_models_tree, :model => :pm_model
   
+  live_tree :pm_models_tree, :model => :pm_model  
   # GET /pm_models
   # GET /pm_models.xml
   def index

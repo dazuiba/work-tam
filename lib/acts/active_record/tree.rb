@@ -75,6 +75,10 @@ module Acts #:nodoc:
           node = self
           node = node.parent while node.parent
           node
+        end  
+        
+        def root?
+          self.parent_id.nil?
         end
 
         # Returns all siblings of the current node.

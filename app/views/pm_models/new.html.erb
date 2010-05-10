@@ -1,11 +1,9 @@
 <h1>New pm_model</h1>
 
-<% form_for(@pm_model) do |f| %>
-  <%= f.error_messages %>
-
+<% form_for(@pm_model) do |f| %>  
+	<%= f.hidden_field :pm_folder_id %>
+	<%= render :partial => 'form', :locals => {:f => f} %>
   <p>
     <%= f.submit 'Create' %>
   </p>
-<% end %>
-
-<%= link_to 'Back', pm_models_path %>
+<% end %>                         

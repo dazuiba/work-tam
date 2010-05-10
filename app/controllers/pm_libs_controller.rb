@@ -14,10 +14,7 @@ class PmLibsController < ApplicationController
   # GET /pm_libs/1.xml
   def show
     @pm_lib = PmLib.find(params[:id])       
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @pm_lib }
-    end
+    redirect_to pm_lib_pm_folders_path(@pm_lib)
   end
 
   # GET /pm_libs/new
