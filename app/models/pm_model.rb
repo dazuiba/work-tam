@@ -7,7 +7,7 @@ class PmModel < ActiveRecord::Base
    has_one  :element_root, :class_name => "PmElement", :conditions=>{:parent_id=>nil}
    
    typed_serialize :properties, OpenStruct
-   
+   track_version# "Model"
    #create Root element
    after_create do |record|
      record.build_element_root(:name=>"Root", :title=>"Root", :leaf=>false).save!

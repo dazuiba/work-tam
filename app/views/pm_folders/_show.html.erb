@@ -21,11 +21,9 @@ jQuery(document).ready(function($) {
 <div> 
 	 <%= breadcrumb  breadcrumb_links %> 
 </div>
-<p>
-  <%= link_to 'Destroy', @pm_folder, :confirm => 'Are you sure?', :method => :delete %>
-</p>
+
 <% if !@pm_folder.pm_models.empty?%>    
-		<h2>Models</h2>             
+		<h2>Pages</h2>             
 		<%= add_model_link %>	
 	 
 	  <% table @pm_folder.pm_models, %w[name title] do |row, klass|%>
@@ -55,4 +53,11 @@ jQuery(document).ready(function($) {
 <% else %>
 
 	<%= [add_folder_link, add_model_link].join("|") %>
-<% end %>
+<% end %>  
+<p>  
+	<% if @pm_folder.root? %>
+		<%= link_to_function 'Destroy', "alert('根节点无法删除')"  %>
+	<% else %>   
+		  <%= link_to 'Destroy', @pm_folder, :confirm => 'Are you sure?', :method => :delete %>
+	<% end %>      
+</p>  

@@ -81,10 +81,7 @@ class PmElementsController < ApplicationController
   def destroy
     @pm_element = PmElement.find(params[:id])
     @pm_element.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(pm_elements_url) }
-      format.xml  { head :ok }
-    end
+    redirect_to pm_element_path(@pm_element.parent)
+    
   end
 end

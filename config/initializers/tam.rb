@@ -5,7 +5,8 @@ require "acts/controller/live_tree"
 require "extensions/all"
 
 ActiveRecord::Base.send :include,  Acts::ActiveRecord::List  
-ActiveRecord::Base.send :include,  Acts::ActiveRecord::Tree
+ActiveRecord::Base.send :include,  Acts::ActiveRecord::Tree       
+ActiveRecord::Base.send :include,  TrackVersion    
 ActionController::Base.send :include, Acts::Controller::LiveTree
                    
 

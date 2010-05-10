@@ -18,4 +18,12 @@
 	 <% if !@pm_element.leaf %>
 	 	<%= [add_element_link,add_submodel_link].join("|")  %>   
 	 <% end %>
-</div>
+</div>        
+
+<p> 
+	<% if @pm_element.root? %>
+		<%= link_to_function 'Destroy', "alert('根节点无法删除')"  %>
+	<% else %>
+  	<%= link_to 'Destroy', @pm_element, :confirm => 'Are you sure?', :method => :delete %>
+	<% end %>
+</p>

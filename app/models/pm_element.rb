@@ -3,7 +3,8 @@ class PmElement < ActiveRecord::Base
   acts_as_tree      
   
   typed_serialize :properties, OpenStruct
-  
+  track_version
+ 
   before_create do |record|
     if record.pm_model_id.nil? && record.parent
       record.pm_model_id = record.parent.pm_model_id
