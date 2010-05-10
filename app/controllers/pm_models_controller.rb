@@ -15,13 +15,11 @@ class PmModelsController < ApplicationController
 
   # GET /pm_models/1
   # GET /pm_models/1.xml
-  def show
-    @pm_model = PmModel.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @pm_model }
-    end
+  def show   
+    @pm_model = PmModel.find(params[:id])                        
+    @element_root = @pm_model.element_root               
+    raise if @element_root.nil?
+    redirect_to pm_model_pm_element_path(@pm_model, @element_root)
   end
 
   # GET /pm_models/new

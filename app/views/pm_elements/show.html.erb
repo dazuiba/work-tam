@@ -1,0 +1,33 @@
+<%= javascript_include_tag '/livetree/live_tree' %>     
+                                   
+<% content_for :sidebar do %>
+	 <%= live_tree :element, {
+                  :initial_data_root => @element_root,
+                  :initial_data_options => { :depth => 2 },
+                  :initial_data_whole_tree => false,
+                  #:css_class => "sidebar_tree",
+                  :preload_items => false,
+                  :allow_click_branch => true,
+                  :on_click_item => "onClickItem(item.id)"
+                  }
+     %>
+     <script type="text/javascript" charset="utf-8">
+      function onClickItem(elementID) {
+        new Ajax.Updater('list_view', '<%= pm_model_pm_elements_path(@pm_element) %>/'+elementID, { method: 'get', asynchronous:true, evalScripts:true})
+      }                          
+      Event.observe(window,"load",function(event){
+          var loadId = <%= @pm_element.id%>
+          element.expandItem(loadId)
+          onClickItem(loadId)
+      });
+  </script>
+<% end %>   
+
+<div id='list_view'>
+    <% unless request.xhr? %>
+	    <h1>正在加载，请稍等。。。</h1>
+		<%else%>
+			<center><h1>请点击左侧</h1></center>
+    <%end%>
+</div>
+                                                                           

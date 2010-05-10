@@ -1,87 +1,89 @@
 class PmElementsController < ApplicationController
 
   
-  live_tree :pm_models_tree, :model => :pm_model  
-  # GET /pm_models
-  # GET /pm_models.xml
+  live_tree :element, :model => :pm_element  
+  # GET /pm_elements
+  # GET /pm_elements.xml
   def index
-    @pm_models = PmModel.all
+    @pm_elements = PmElement.all
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @pm_models }
+      format.xml  { render :xml => @pm_elements }
     end
   end
 
-  # GET /pm_models/1
-  # GET /pm_models/1.xml
+  # GET /pm_elements/1
+  # GET /pm_elements/1.xml
   def show
-    @pm_model = PmModel.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @pm_model }
+    @pm_element = PmElement.find(params[:id])      
+    @pm_model = @pm_element.pm_model
+    @element_root = @pm_model.element_root
+    if request.xhr?
+      render :partial => "show"
+    else
     end
   end
 
-  # GET /pm_models/new
-  # GET /pm_models/new.xml
+  # GET /pm_elements/new
+  # GET /pm_elements/new.xml
   def new
-    @pm_model = PmModel.new
+    @pm_element = PmElement.new(params[:pm_element])
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @pm_model }
+      format.xml  { render :xml => @pm_element }
     end
   end
 
-  # GET /pm_models/1/edit
+  # GET /pm_elements/1/edit
   def edit
-    @pm_model = PmModel.find(params[:id])
+    @pm_element = PmElement.find(params[:id])
   end
 
-  # POST /pm_models
-  # POST /pm_models.xml
+  # POST /pm_elements
+  # POST /pm_elements.xml
   def create
-    @pm_model = PmModel.new(params[:pm_model])
-
+    @pm_element = PmElement.new(params[:pm_element]) 
+    @pm_element.properties = OpenStruct.new params[:properties]
     respond_to do |format|
-      if @pm_model.save
-        flash[:notice] = 'PmModel was successfully created.'
-        format.html { redirect_to(@pm_model) }
-        format.xml  { render :xml => @pm_model, :status => :created, :location => @pm_model }
+      if @pm_element.save
+        flash[:notice] = 'PmElement was successfully created.'
+        format.html { redirect_to(@pm_element) }
+        format.xml  { render :xml => @pm_element, :status => :created, :location => @pm_element }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @pm_model.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @pm_element.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # PUT /pm_models/1
-  # PUT /pm_models/1.xml
+  # PUT /pm_elements/1
+  # PUT /pm_elements/1.xml
   def update
-    @pm_model = PmModel.find(params[:id])
+    @pm_element = PmElement.find(params[:id])   
+    @pm_element.properties = OpenStruct.new params[:properties]
 
     respond_to do |format|
-      if @pm_model.update_attributes(params[:pm_model])
-        flash[:notice] = 'PmModel was successfully updated.'
-        format.html { redirect_to(@pm_model) }
+      if @pm_element.update_attributes(params[:pm_element])
+        flash[:notice] = 'PmElement was successfully updated.'
+        format.html { redirect_to(@pm_element) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @pm_model.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @pm_element.errors, :status => :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /pm_models/1
-  # DELETE /pm_models/1.xml
+  # DELETE /pm_elements/1
+  # DELETE /pm_elements/1.xml
   def destroy
-    @pm_model = PmModel.find(params[:id])
-    @pm_model.destroy
+    @pm_element = PmElement.find(params[:id])
+    @pm_element.destroy
 
     respond_to do |format|
-      format.html { redirect_to(pm_models_url) }
+      format.html { redirect_to(pm_elements_url) }
       format.xml  { head :ok }
     end
   end

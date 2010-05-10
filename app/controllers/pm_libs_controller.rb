@@ -13,8 +13,9 @@ class PmLibsController < ApplicationController
   # GET /pm_libs/1
   # GET /pm_libs/1.xml
   def show
-    @pm_lib = PmLib.find(params[:id])       
-    redirect_to pm_lib_pm_folders_path(@pm_lib)
+    @pm_lib = PmLib.find(params[:id])  
+    @folder_root = @pm_lib.folder_root
+    redirect_to pm_lib_pm_folder_path(@pm_lib, @folder_root)
   end
 
   # GET /pm_libs/new

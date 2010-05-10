@@ -4,7 +4,7 @@ class CreatePmModels < ActiveRecord::Migration
       t.string   "name"
       t.string   "title"
       t.integer  :pm_model_id
-      t.boolean  :leaf
+      t.boolean  "leaf", :default => true
       t.integer  :parent_id
       t.text     :properties
       t.datetime "created_at"

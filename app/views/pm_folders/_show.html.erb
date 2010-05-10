@@ -1,11 +1,23 @@
 <%= render_facebox %>
 <%
-	breadcrumb_links =  @pm_folder.ancestors.map{|e|link_to(e.name, pm_lib_pm_folder_path(e.pm_lib_id, e))}      
-  breadcrumb_links << link_to(@pm_folder.name, pm_lib_pm_folder_path(@pm_folder.pm_lib_id, @pm_folder))   
+	breadcrumb_links =  @pm_folder.namespaces.map{|e|link_to(e.name, pm_lib_pm_folder_path(e.pm_lib_id, e))}      
 
 	add_folder_link = (link_to_popup 'Add Folder', 	 new_pm_folder_path(:parent_id => @pm_folder)) 
 	add_model_link  = (link_to_popup 'Add Model', 	 new_pm_model_path("pm_model[pm_folder_id]" => @pm_folder))
-%>
+%>     
+
+   
+<script type="text/javascript">  
+jQuery(document).ready(function($) {
+  $('.popup').popupWindow({ 
+			height:500, 
+			width:800, 
+			top:50, 
+			left:50 
+	});
+})
+
+</script>
 <div> 
 	 <%= breadcrumb  breadcrumb_links %> 
 </div>
@@ -16,7 +28,7 @@
 	  <% table @pm_folder.pm_models, %w[name title] do |row, klass|%>
 			 <tr class="<%= klass %>">
 		  	<td>                       
-					<%= link_to row.name, :action => "index" %>
+					<%= link_to row.name, pm_model_path(row), :class=>"popup"%>
 	  		</td>
 		   	<td>                       
 			 		<%=   row.title %>

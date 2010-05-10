@@ -3,11 +3,7 @@ class PmFoldersController < ApplicationController
   # GET /pm_folders.xml                         
   
   live_tree :folder, :model => :pm_folder
-  def index
-    @pm_lib = PmLib.find(params[:pm_lib_id])
-    @folder_root = @pm_lib.folder_root
-    redirect_to :action => "show", :id => @folder_root.id
-  end
+
 
   # GET /pm_folders/1
   # GET /pm_folders/1.xml

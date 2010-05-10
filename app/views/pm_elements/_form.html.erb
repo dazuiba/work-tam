@@ -1,0 +1,20 @@
+<%= f.error_messages %>   
+
+<% if @pm_element.root? %>   
+	<p>名称: <%= @pm_element.pm_name %> </p>
+	<p>说明: <%= @pm_element.pm_title %> </p>
+	<p>isModel: <%= !@pm_element.leaf %> </p>    
+	 <p>modelNamespace: <%= @pm_element.pm_model.pm_namespace %></p>
+<% else %>      
+	<p>名称: <%= f.text_field :name %> </p>
+	<p>说明: <%= f.text_field :title %> </p>
+	<p>isModel: <%= !@pm_element.leaf %> </p>     
+	 <% fields_for "properties", @pm_element.properties do |ff| -%>
+	   <p>isCache: <%= ff.text_field :cache %> </p>
+			<p>Selector: <%= ff.text_field :selector %> </p>
+			<p>Type: <%= ff.text_field :html_type %> </p>
+	 <% end -%> 
+
+<% end %>
+
+	                            
