@@ -1,5 +1,5 @@
 class PmFolder < ActiveRecord::Base      
-  has_many :pm_models 
+  has_many :pm_models, :dependent => :destroy
   belongs_to :pm_lib
   acts_as_tree
   def tree_name; name ; end        

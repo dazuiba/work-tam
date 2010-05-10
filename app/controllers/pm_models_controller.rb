@@ -43,16 +43,12 @@ class PmModelsController < ApplicationController
   def create
     @pm_model = PmModel.new(params[:pm_model])
 
-    respond_to do |format|
-      if @pm_model.save
-        flash[:notice] = 'PmModel was successfully created.'
-        format.html { redirect_to(@pm_model) }
-        format.xml  { render :xml => @pm_model, :status => :created, :location => @pm_model }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @pm_model.errors, :status => :unprocessable_entity }
-      end
-    end
+    if @pm_model.save
+      flash[:notice] = 'PmModel was successfully created.'       
+      redirect_to pm_folder_path(@pm_model.pm_folder)                            
+    else
+      format.html { render :action => "new" }                                                
+    end                     
   end
 
   # PUT /pm_models/1
