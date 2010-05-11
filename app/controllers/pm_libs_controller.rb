@@ -14,9 +14,17 @@ class PmLibsController < ApplicationController
   # GET /pm_libs/1.xml
   def show
     @pm_lib = PmLib.find(params[:id])  
-    @folder_root = @pm_lib.folder_root    
-    raise "@folder_root is nil" if @folder_root.nil?
-    redirect_to pm_lib_pm_folder_path(@pm_lib, @folder_root)
+    @folder_root = @pm_lib.folder_root                 
+    respond_to do |format|
+      format.html {
+        raise "@folder_root is nil" if @folder_root.nil?
+        redirect_to pm_lib_pm_folder_path(@pm_lib, @folder_root)
+      }
+      format.xml  { 
+        render :xml => YAML.dump(Pm::LibVersion.new(@pm_lib).version_tree)
+      }
+    end
+
   end
 
   # GET /pm_libs/new

@@ -8,7 +8,9 @@ ActiveRecord::Base.send :include,  Acts::ActiveRecord::List
 ActiveRecord::Base.send :include,  Acts::ActiveRecord::Tree       
 ActiveRecord::Base.send :include,  Pm::TrackVersion    
 ActionController::Base.send :include, Acts::Controller::LiveTree
-                   
+ 
+ActiveRecord::Base.send :include,  ActionController::UrlWriter
+              
 
 GLoc.set_config :default_language => :zh
 GLoc.clear_strings

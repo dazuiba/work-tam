@@ -20,3 +20,4 @@ CVS
 .DS_Store
 .eprj
 doc/installs
+config/initializers/tam_config.rb

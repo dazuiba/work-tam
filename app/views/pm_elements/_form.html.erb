@@ -4,7 +4,7 @@
 	<p>名称: <%= @pm_element.pm_name %> </p>
 	<p>说明: <%= @pm_element.pm_title %> </p>
 	<p>isModel: <%= !@pm_element.leaf %> </p>    
-	 <p>modelNamespace: <%= @pm_element.pm_model.pm_namespace %></p>
+	 <p>modelNamespace: <%= @pm_element.pm_model.namespaces.join(".") %></p>
 <% else %>      
 	<p>名称: <%= f.text_field :name %> </p>
 	<p>说明: <%= f.text_field :title %> </p>
