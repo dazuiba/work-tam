@@ -1,21 +1,14 @@
-mysql1: &using
- adapter: mysql
- host: twork.taobao.net
- password: 20091001
- database: twork_production
- username: sa
- encoding: utf8  
 mysql: &using
   adapter: mysql
-  host: 127.0.0.1
-  password: 
-  database: twork_development
-  username: root
+  host: dev.twork.taobao.net
+  password: auto
+  database: tam_development
+  username: auto
   encoding: utf8
 development:
  <<: *using
 production:
- database: twork_development
+ database: tam_production
  <<: *using        
 redmine:            
  adapter: mysql

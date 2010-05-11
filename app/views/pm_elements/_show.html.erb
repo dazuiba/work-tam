@@ -1,7 +1,6 @@
 <%= render_facebox %>
 <%
-	breadcrumb_links =  @pm_element.ancestors.map{|e|link_to(e.name, pm_model_pm_element_path(e.pm_model_id, e))}      
-  breadcrumb_links << link_to(@pm_element.name, pm_model_pm_element_path(@pm_element.pm_model_id, @pm_element))   
+	breadcrumb_links =  @pm_element.traces.map{|e|link_to(e.tree_name, pm_model_pm_element_path(e.pm_model_id, e))}   
 
 	add_submodel_link = (link_to_popup 'Add sub model', 	 new_pm_element_path("pm_element[parent_id]" => @pm_element, "pm_element[leaf]"=>0)) 
 	add_element_link  = (link_to_popup 'Add element', 	 new_pm_element_path("pm_element[parent_id]" => @pm_element))

@@ -16,5 +16,8 @@ class PmModel < ActiveRecord::Base
    def pm_namespace
      self.pm_folder.namespaces.map{|e|e.name}.join(".")
    end
-              
+   
+   def render_xml
+   	Pm::PageXmlRender.new(self).render
+   end     
 end

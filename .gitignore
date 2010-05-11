@@ -18,3 +18,5 @@ CVS
 *.swp
 .cvsignore
 .DS_Store
+.eprj
+doc/installs

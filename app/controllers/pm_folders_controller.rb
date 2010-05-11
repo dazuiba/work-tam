@@ -76,7 +76,7 @@ class PmFoldersController < ApplicationController
     @pm_folder.destroy
 
     respond_to do |format|
-      format.html { redirect_to(pm_folders_url) }
+      format.html { redirect_to(pm_folder_url(@pm_folder.parent)) }
       format.xml  { head :ok }
     end
   end

@@ -3,7 +3,7 @@
 	breadcrumb_links =  @pm_folder.namespaces.map{|e|link_to(e.name, pm_lib_pm_folder_path(e.pm_lib_id, e))}      
 
 	add_folder_link = (link_to_popup 'Add Folder', 	 new_pm_folder_path(:parent_id => @pm_folder)) 
-	add_model_link  = (link_to_popup 'Add Model', 	 new_pm_model_path("pm_model[pm_folder_id]" => @pm_folder))
+	add_model_link  = (link_to_popup 'Add Page', 	 new_pm_model_path("pm_model[pm_folder_id]" => @pm_folder))
 %>     
 
    
