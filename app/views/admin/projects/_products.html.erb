@@ -1,0 +1,30 @@
+<%= link_to '添加新产品', {:controller=>"/admin/products", :action => "new", :back=>request.request_uri, :line_id => params[:line_id]},{:rel => "facebox"}%>
+<% table products, ["顺序","名称","操作"], {:style=>"width:550px;"}do|prod, clazz| %>
+  <tr class="<%= clazz %>">
+    <td>
+    	<span id="position_<%= prod.id %>"><%=h prod.position %></span>
+    	<script type="text/javascript" charset="utf-8"> 
+    		new Ajax.InPlaceEditor('position_<%= prod.id %>', '<%= url_for(:action=>"update_position", :id=>prod) %>');
+    	</script>
+    </td>
+    <td>
+    	<span id="name_<%= prod.id %>"><%=h prod.name %></span>
+    	<script type="text/javascript" charset="utf-8"> 
+    		new Ajax.InPlaceEditor('name_<%= prod.id %>', '<%= url_for(:controller=>"admin/products", :action=>"update_name", :id=>prod) %>');
+    	</script>    	
+  	</td>
+    <td>
+    	<%= link_to_popup '管理项目', {:action=>"product_projects", :id => prod.id}%>    	
+    	
+    	
+    	<%= link_to '删除', {:controller => "admin/products", 
+    											 :action=>"destroy", 
+    											 :id => prod.id, :back=> request.request_uri
+    											 } , 
+    											 :confirm => 'Are you sure?', 
+    											 :method => :delete %>    	
+    	
+  	</td>
+  </tr>
+<% end %>
+

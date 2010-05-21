@@ -1,0 +1,14 @@
+<p>IP:	<%= f.text_field :ip %></p>
+<p>负责人：<%= f.text_field :owner %></p>
+<p>标识：<%= f.text_field :name %></p>
+<p>类别：
+<% if @machine.new_record? %>
+	<%= @machine.machine_type_text %>
+	<%= f.hidden_field :machine_type %>
+<% else %>
+	<%= f.select :machine_type, Machine::TYPE_SELECT_PARE %>
+<% end %>
+</p>
+<%= f.hidden_field :id %>
+<%= hidden_field_tag :page, params[:page] %>
+<p><%= f.submit "提交" %></p>

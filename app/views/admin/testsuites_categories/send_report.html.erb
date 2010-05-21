@@ -1,0 +1,5 @@
+<% form_tag({:class => "form"}, :method => "post") do %>
+  将会发送到以下地址：
+  <%= text_area_tag 'mail_to', @mail_to, :size => "55x3" %>  
+  <%= submit_tag "发送", :disable_with => '发送ing...' %>  
+<% end -%>

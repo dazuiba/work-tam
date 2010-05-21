@@ -1,0 +1,62 @@
+<%= title_with_help_link "管理用户", 'Users Page' %>
+<%= render :partial => 'shared/admin_actions'%>
+<%= render :partial => 'shared/list_actions' %>
+
+
+<div id="content">
+	<table id='users'>
+		<thead>
+			<tr class="table-top">
+				<th>用户名</th>
+			  <th>姓名</th>
+        <th class="align-center">管理员</th>
+        <th>激活/停用</th>
+        <th>&nbsp;</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<% for user in @users -%>
+           <% if user == logged_in_user -%>
+            <tr class="highlight" id='<%= user.id %>'>
+           <% else -%>
+           	<tr id='<%= user.id %>' class="<%= cycle('odd', 'even') %>">
+           <% end -%>
+        		<td><%= user.login %></td>
+        		<td><%= user.name %></td>
+         		<td class="align-center">         		
+				  			<% form_remote_tag :url => {:action => 'toggle_admin', :id => user, :controller => 'users'},
+				  			                   :html => {:id => "toggle-admin-for-#{user.id}-form"},
+				      	                   :before => "Element.show('spinner')",
+				      	                   :complete => "Element.hide('spinner')" do -%>
+				         		  <%= check_box_tag "admin-#{user.id}", '1', user.admin?, :onclick => "$('toggle-admin-for-#{user.id}-form').onsubmit();",
+				         		  																											  :disabled => (user == logged_in_user || !user.activated?) %>
+				         		  
+							  <% end -%>
+         		</td>
+         		
+         		<td>
+         		  <%= user.activated? ? '激活' : '停用' %>
+         		  <%= link_to_remote("(#{user.activated? ? '停用' : '激活'})", 
+         		                     { 
+         		                       :url => {:action => 'toggle_activate', :id => user.id},
+         		                       :before => "Element.show('spinner')",
+            	                     :complete => "Element.hide('spinner')"
+            	                   },
+            	                   { :id  => "#{user.id}_toggle_activation" } )  unless user.admin? %>
+         		</td>
+         	<% if user == logged_in_user-%>
+           	<td class="align-right standard-link-spacing" style="font-weight: normal;">
+          <% else -%>
+           	<td class="align-right standard-link-spacing">         		
+          <% end -%>
+         		  <%= link_to "编辑", :action => 'edit', :id => user %>
+         		  <%= link_to("修改密码", :action => 'change_password', :id => user) if supports_password_change? %>
+         		</td>
+           </tr>
+			<% end -%>
+		</tbody>
+	</table>
+</div>
+
+<%= render :partial => 'shared/list_actions' %>

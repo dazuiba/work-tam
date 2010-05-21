@@ -1,0 +1,30 @@
+<p>
+	您好，	本次回归测试报告如下,  请您尽快配合确认。
+	<br>
+	<% url =  "http://twork.taobao.net/auto/bgjob_suites/#{@bgjob_suite.id}?confirm=true" %>
+	<span style="color:red;"> 确认地址：<%= link_to url, url %> </span> 
+</p>
+<p>如有疑问， 请直接旺旺 云梦 或 樊俊</p>
+
+（已经按照Failed/Passed排序）
+<% table(@bgjob_suite.bgjobs, 
+				 %w{用例名称 维护者 排队状态 执行结果 开始时间 完成时间 时长(秒)},
+				 :tag_option => 'cellpadding="2" border="1"') do |bgjob, klass| -%>
+	  <tr>
+	    <td><%= "##{bgjob.id}#{bgjob.testcase.title}" %> </td>
+	    <td><%= link_to_user bgjob.testcase.auto_designer if bgjob.testcase %> </td>
+	    <td><%= bgjob_state bgjob %> </td>
+	    <td>
+	    		<%= bgjob_result bgjob %>	
+	     </td>
+	    <td>
+	    		<%= format_time bgjob.started_at %>
+	     </td>
+	    <td>
+	    		<%= format_time bgjob.done_at  %>		    	
+	     </td>
+	    <td>
+	    		<%= bgjob.duration  %>
+	     </td>
+	  </tr>
+<% end %>

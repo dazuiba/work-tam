@@ -1,0 +1,20 @@
+<table>
+    <tr>
+        <td>
+            机器ip
+        </td>
+        <td>
+            执行结果
+        </td>
+    </tr>
+    <% @exec_info_hash.each do |k,v| %>
+    <tr>
+        <td>
+            <%=k%>
+        </td>
+        <td>
+            <%=v%>
+        </td>
+    </tr>
+    <% end %>
+</table>

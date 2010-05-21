@@ -1,0 +1,5 @@
+<%= render :partial => "auto/sidebar" %>
+<% form_tag({:class => "form", :confirm=>"确定？", :method => "get"}) do %>
+	请选择操作: <%= select_tag "go", options_for_select([["数据库备份","bak"], ["svn同步", "svn"]])%>
+	<%= submit_tag "提交", :disable_with => '提交ing...' %>  
+<% end -%>

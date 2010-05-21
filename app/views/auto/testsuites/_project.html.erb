@@ -1,0 +1,18 @@
+<h3><%= project.name %></h3>		
+<%= link_to "新建", {:action => "new", :system=>true, :type=>"line", :project_id => project}, 
+  {:class => "icon icon-add" } if params[:type]!= 'system' || (params[:type]=='system' && User.current.admin?) %>
+<% if !project.testsuites.blank?%>		
+  <dl>
+    <% project.testsuites.each do|suite| %>
+      <dt class="issue">
+        <span class="time"><%= time_ago_in_words(suite.updated_at) %></span>
+        <%= link_to suite.title, {:action => "show", :id => suite} %>&nbsp;&nbsp;
+        <%= link_to "编辑", {:action => "edit", :id => suite} %> |
+        <%= link_to "删除", suite, :confirm => '将会删除所有相关资料', :method => :delete %>
+      </dt>
+      <dd>
+        <span class="description"><%= suite.description %></span>
+        <span class="author"><%= link_to_user suite.created_by %></span></dd>
+    <% end %>
+  </dl>
+<% end %>

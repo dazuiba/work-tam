@@ -1,0 +1,25 @@
+<%= render :partial => 'sidebar', :locals=>local_assigns %>
+<% form_tag({:action=>"create_make_plan"}) do %>
+<% index = 0 %>
+<% table(@testsuites, %w{全选 回归测试集  执行IP   }) do |testsuite, klass| -%>
+<tr class="<%= klass %>">
+    <td>
+		<%= check_box_tag "exec[]" ,index.to_s+"_"+testsuite.id.to_s, @testsuite_category.testsuite_regress_ip && @testsuite_category.testsuite_regress_ip["arr_exec"].include?(index.to_s+"_"+testsuite.id.to_s)%>
+        <br/>
+    </td>
+    <td>
+        <%= text_field_tag("title" ,testsuite.title,{:disabled=>true}) %>
+        <br/>
+    </td>
+    <td>
+        <%= select_machine_tag "exec_ip[]", make_plan_ip (@testsuite_category,testsuite),{:required => true,:local => true} %>
+        <br/>
+    </td>
+</tr>
+<% index = index+1 %>
+<% end %>
+<%= render :partial => "mail_to" %>
+<%= render :partial => "make_plan" %>
+<%= render :partial => "hidden_category" %>
+<input type="button" onclick="selectAll('exec[]')" value="全选"><%= submit_tag "保存",:onclick => "return checkForm()" %>
+<% end %>

@@ -1,0 +1,13 @@
+<%= error_messages_for 'menu' %>
+
+<div class="box">
+<!--[form:menu]-->
+<p>父菜单：<%= @menu.parent.nil? ? "/" : @menu.parent.name %></p>
+<%= f.hidden_field :parent_id %>
+<p>
+	<%= f.text_field :name, :required => true %><br /><em>菜单名称，中文</em></p>
+<p>
+	<%= f.text_field :url %><br /><em>对应的URL地址，请以'/'或者'http://'开头</em></p>
+<p>
+	<%= f.text_field :id_string %><br /><em>写程序判断的时候需要</em></p>
+<!--[eoform:menu]-->

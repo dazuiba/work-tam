@@ -1,0 +1,25 @@
+
+<% tabs = [{:log => "log"},{:error_out => "error out"},{:error_log => "error log"}] %> 
+
+<%= tabs_header(tabs, :container => "#popup-content") %>
+
+
+<% tab_content(:log, tabs) do %>
+	<pre>
+		<code><%= h tail_file(@daemon.log)  %></code>
+	</pre>	
+<% end %>
+
+
+<% tab_content(:error_out, tabs) do %>
+	<pre>
+		<code><%= h tail_file(@daemon.error_out)  %></code>
+	</pre>	
+<% end %>
+
+
+<% tab_content(:error_log, tabs) do %>
+	<pre>
+		<code><%= h tail_file(@daemon.error_log)  %></code>
+	</pre>	
+<% end %>

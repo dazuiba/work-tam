@@ -1,3 +1,4 @@
+
 <%= render_facebox %>
 <%
 	breadcrumb_links =  @pm_folder.namespaces.map{|e|link_to(e.name, pm_lib_pm_folder_path(e.pm_lib_id, e))}      
@@ -8,14 +9,15 @@
 
    
 <script type="text/javascript">  
-jQuery(document).ready(function($) {
-  $('.winpopup').popupWindow({ 
-			height:500, 
-			width:800, 
-			top:50, 
-			left:50 
-	});
-})
+// jQuery(document).ready(function($) {
+//   $('.winpopup').popupWindow({ 
+// 			height:500, 
+// 			width:800, 
+// 			top:50, 
+// 			resizable: 1,
+// 			left:50 
+// 	});
+// })  
 
 </script>
 <div> 
@@ -23,16 +25,15 @@ jQuery(document).ready(function($) {
 </div>
 
 <% if !@pm_folder.pm_models.empty?%>    
-		<h2>Pages</h2>             
 		<%= add_model_link %>	
 	 
 	  <% table @pm_folder.pm_models, %w[name title] do |row, klass|%>
 			 <tr class="<%= klass %>">
 		  	<td>                       
-					<%= link_to row.name, pm_model_path(row), :class=>"winpopup"%>
+					<%= link_to row.name, pm_model_path(row), :class=>"winpopup", :popup=>true%>
 	  		</td>
 		   	<td>                       
-			 		<%=   row.title %>
+			 		<%= row.title %>
 	  		</td>
 			</tr>
 		<% end %>

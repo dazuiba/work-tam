@@ -1,0 +1,16 @@
+  <%=label(:post, :title, "按周")%>
+  <%= radio_button_tag("plann", "week",@testsuite_category.regress_plan && @testsuite_category.regress_plan["wday"],:onclick => "plannChecked()")  %>
+  <%=label(:post, :title, "按天")%>
+  <%= radio_button_tag("plann", "day",!(@testsuite_category.regress_plan && @testsuite_category.regress_plan["wday"]),:onclick => "plannUnChecked()") %>
+  <%= select "regress_plan","start_time",(0..23).to_a ,{:selected => (select_start_time @testsuite_category).to_i } %>点
+  <div id="week" style="display:none">
+    <% ['日','一', '二','三', '四', '五', '六'].each_with_index do|e, i|  %>
+      周<%= e %>
+      <%= check_box_tag('regress_plan[wday][]',i.to_s, select_wday(@testsuite_category,i),:id => nil)%>
+    <% end %>
+  </div>
+<script>
+	if (<%=@testsuite_category.regress_plan && @testsuite_category.regress_plan["wday"]%>) {
+		plannChecked();
+	}
+</script>

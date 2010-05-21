@@ -1,0 +1,29 @@
+<!--[form:user]-->
+
+<p>
+  <label for="user_login">用户名:<span class='required'>*</span> <span class="notes"></span></label>
+  <%= error_message_on 'user', 'login', 'Sign-in name ', '', 'field_error' %>
+  <%= text_field "user", "login", :size => 80 %>
+</p>
+
+<p>
+  <label for="user_name">姓名:<span class='required'>*</span> <span class="notes"></span></label>
+  <%= error_message_on 'user', 'name', 'Full Name ', '', 'field_error'%>
+  <%= text_field "user", "name", :size => 80 %>
+</p>
+<p>
+  <label for="user_password">
+  	设密码:<span class='required'>*</span>
+	</label>
+  <%= error_message_on 'user', 'password', 'Password ', '', 'field_error' %>
+  <%= password_field "user", "password", :value => "", :size => 25 %>
+</p>
+
+<p>
+  <label for="user_password_confirmation">再输入一遍密码:<span class='required'>*</span></label>
+  <%= error_message_on 'user', 'password_confirmation', 'Password confirmation ', '', 'field_error' %>
+  <%= password_field "user", "password_confirmation", :value => "", :size => 25 %>
+</p>
+
+<p><span class="required">*</span> 为必填项！</p>
+<!--[eoform:user]-->

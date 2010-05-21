@@ -1,0 +1,47 @@
+<style>
+table.wikitable, table.prettytable {
+background:none repeat scroll 0 0 #F9F9F9;
+border:1px solid #AAAAAA;
+border-collapse:collapse;
+margin:1em 1em 1em 0;
+}
+.wikitable th, .wikitable td, .prettytable th, .prettytable td {
+border:1px solid #AAAAAA;
+padding:0.2em;
+}
+.wikitable th, .prettytable th {
+background:none repeat scroll 0 0 #F2F2F2;
+text-align:center;
+}
+.wikitable caption, .prettytable caption {
+font-weight:bold;
+}
+table.navbox {
+border:1px solid #AAAAAA;
+clear:both;
+font-size:88%;
+margin:auto;
+padding:1px;
+text-align:center;
+width:100%;
+}
+table.navbox + table.navbox {
+margin-top:-1px;
+}
+</style>
+
+<h3>页面(PageModel)</h3>
+<p>命名空间: <%= @pm_element.pm_model.namespaces.join(".") %></p>
+<p>名称(英文): <%= text_field_tag :name, @pm_element.pm_model.name %> 
+说明(中文): <%= text_field_tag :title, @pm_element.pm_model.title %> 
+ <%= submit_tag 'Update' %>           </p>
+	<%= render :partial => "model", :object => @pm_element%>  
+<% submodels =  @pm_element.all_children.find_all{|e|!e.leaf}%>
+<% if submodels.size>0%>
+	<h3>区域(SubModel)</h3>
+<% end %>
+<% submodels.each do|sub_model| %>
+	<h4><%= sub_model.title%>(<%= sub_model.name%>)</h4>
+	<p>父元素: <%= sub_model.parent.root? ? "根节点" : sub_model.parent.name%></p>
+	<%= render :partial => "model", :object => sub_model%>
+<% end %> 

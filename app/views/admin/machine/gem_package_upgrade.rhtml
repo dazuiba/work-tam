@@ -1,0 +1,59 @@
+<script src="/javascripts/common.js" type="text/javascript">
+</script>
+<% form_tag({:action=>"gem_package_upgrade_doaction"}) do %>
+<table>
+    <tr>
+        <% table(@machines_upgrade, %w{全选 产品线 机器IP staf状态  空闲状态 查看}) do |machine, klass| -%>
+        <tr class="<%= klass %>">
+            <td>
+                <% if machine.ping_ok ==1 && machine.locked_by_id.nil? %>
+                <%= check_box_tag "upgrade_ip[]",machine.ip %>
+                <br/>
+                <% end %>
+            </td>
+            <td>
+                <%=machine.name %>
+                <br/>
+            </td>
+            <td>
+                <%=machine.ip %>
+                <br/>
+            </td>
+            <td>
+                <%=machine.ping_ok ==1 ? "可用":"不可用" %>
+                <br/>
+            </td>
+            <td>
+                <%=machine.locked_by_id.nil? ? "空闲":"正在执行任务#{machine.locked_by_id}" %>
+                <br/>
+            </td>
+            <td>
+                <% if machine.ping_ok ==1 %>
+                <%= link_to_popup("查看", :action => "gem_list",:id => machine.id) %>
+                <br/>
+                <% end %>
+            </td>
+        </tr>
+        <% end %>
+    </tr>
+	<tr>
+        <td>
+            输入命令:
+        </td>
+        <td>
+            <%=text_area_tag "cmd",nil,:rows => 10, :cols => 60 %><br/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            其他ip:&nbsp;&nbsp;&nbsp;&nbsp;
+        </td>
+        <td>
+            <%=text_area_tag "other_ip",nil,:rows => 5, :cols => 60 %><font color="red">
+            多个ip之间用;分隔
+        </font>
+        </td>
+    </tr>
+</table>
+<input type="button" onclick="selectAll('upgrade_ip[]')" value="全选"><%= submit_tag "保存",:disable_with => '正在处理...' %>
+<% end %>

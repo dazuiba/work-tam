@@ -1,0 +1,199 @@
+<% tabs = [{:script => "脚本"}, {:detail => "详细信息"}, {:steps => "操作步骤"}, {:log => "日志详细信息"}, {:history => "历史记录"}]%>
+<%= tabs_header(tabs) %>
+<% tab_content(:detail, tabs) do%>
+  <%# form_for :bgjobs, :url=>{:tab=>"detail"}  do  %>
+  <table>
+    <tr>
+      <td>测试名称:&nbsp;&nbsp;&nbsp;
+        <%= text_field :testcase, :title,:value => (@testcase.title rescue "") ,:size => 20 %>
+      </td>
+      <td>创建日期:&nbsp;&nbsp;&nbsp;
+        <%= calendar_date_select_tag "testcase[created_at]",(@testcase.created_at.strftime("%Y-%m-%d") rescue ""),:popup => :force %>
+      </td>
+    </tr>
+    <tr>
+      <td>设计者:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <%= select :testcase,:designer, User.find(:all).map{|e|[e.nickname, e.login]},:selected => (@testcase.old_designer rescue ""),:include_blank => true %>
+      </td>
+      <td>状态:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <select id="testcase_status" name="testcase[status]"><option value=""></option>
+          <option value="0">开始</option>
+          <option value="1">结束</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= text_area :testcase, :title,:value => "" ,:rows => 5, :cols => 20 %>
+      </td>
+    </tr>
+    <tr>
+      <td>级别:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <%= select :testcase,:priority, [["P1", "P1"],["P2", "P2"],["P3", "P3"],["P4", "P4"],["P5", "P5"]],:selected => (@testcase.priority rescue ""),:include_blank => true %>
+      </td>
+    </tr>
+    <tr>
+      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input id="testcase_status2" name="testcase[status2]" type="radio" value="1" />自动化
+        <input id="testcase_status2" name="testcase[status2]" type="radio" value="0" />手工
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+  <%#*<td align="right">%>
+  <%#= submit_tag "保存" %>
+  <%#*</td>%>
+    </tr>
+
+  </table>
+  <%# end %>
+<% end %>
+
+<% tab_content(:steps, tabs) do %>
+  <div id="sub_items_steps" >
+    <% table(@steps, %w{序号 内容 预期结果}) do |f, klass| -%>
+      <tr class="<%= klass %>">
+        <td width="50"><%= f.position %></td>
+        <td width="250"><%= f.content %></td>
+        <td><%= f.content_expect %></td>
+      </tr>
+    <% end %>
+    <%= will_paginate @steps, :class => "digg_pagination", :params => {:tab=>"steps"}%>
+  </div>
+<% end %>
+
+<% tab_content(:script, tabs) do%>
+  <%# form_for :bgjobs, :url=>{:tab=>"detail"}  do  %>
+  <table>
+    <tr>
+      <td>脚本名称:&nbsp;&nbsp;&nbsp;
+        <%= text_field :testcase_script, :title,:value => (@script.script_path rescue "") ,:size => 60 %>
+      </td>
+    </tr>
+    <tr>
+      <td>维护人:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <%= select :testcase_script,:author, User.find(:all).map{|e|[e.nickname, e.login]},:selected => (@script.author rescue ""),:include_blank => true %>
+      </td>
+    </tr>
+    <tr>
+      <td>运行状态:&nbsp;&nbsp;&nbsp;
+        <%= text_field :testcase_script, :state,:value => (Auto::TestcaseScript.current_tc_state(@testcase.id).state rescue "") ,:size => 20 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">
+        <%- unless @script.nil? -%>
+          <a rel="facebox" href="/auto/bgjobs/<%= @testcase.id %>/create_job?target=show_testcase">运行</a>
+        <%- end -%>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= text_area :testcase_script, :script,:value => (@script.script rescue "") ,:rows => 15, :cols => 60, :class => "brush: ruby;" %>
+      </td>
+    </tr>
+  </table>
+  <%# end %>
+  <div id="sub_items_script" >
+    <%- if @script.nil? -%>
+    <%- else -%>
+      <% col_titles = @script.col_titles %><br>
+      <% data = @testcase.data %>
+      <% if col_titles.size==data.size %>
+        <table class="list table" style="text-align: left;">
+          <thead>
+            <tr>
+              <th>用例</th>
+              <% col_titles.each do |col_title| %>
+                <th><%= col_title %></th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="odd" style="color: red;">
+              <td><%= @testcase.title rescue "" %></td>
+              <% data.each do |d| %>
+                <td><%= d %></td>
+              <% end %>
+            </tr>
+          </tbody>
+        </table>
+      <% end %>
+    <%- end -%>
+  </div>
+<% end %>
+
+<% tab_content(:log, tabs) do%>
+  <%# form_for :bgjobs, :url=>{:tab=>"detail"}  do  %>
+  <table>
+    <tr>
+      <td>执行人:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <%= text_field :auto_bgjob, :exec_user_id,:value => (@auto_bgjob && @auto_bgjob.exec_user ? @auto_bgjob.exec_user.nickname : "") ,:size => 20 %>
+      </td>
+    </tr>
+    <tr>
+      <td>执行时间:&nbsp;&nbsp;&nbsp;
+        <%= text_field :auto_bgjob, :created_at,:value => (@auto_bgjob.created_at.strftime("%Y-%m-%d %H:%M:%S") rescue ""),:size => 20 %>
+      </td>
+    </tr>
+    <tr>
+      <td>执行结果:&nbsp;&nbsp;&nbsp;
+        <%= text_field :auto_bgjob, :exec_result,:value => (@auto_bgjob.exec_result rescue ""),:size => 20 %>
+      </td>
+    </tr>
+    <tr>
+      <td>日志详情:&nbsp;&nbsp;&nbsp;
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <%= text_area :auto_bgjob, :result_log,:value => (@auto_bgjob.result_log rescue ""),:rows => 10, :cols => 20, :class => "brush: ruby;" %>
+      </td>
+    </tr>
+  <%#*<tr>%>
+  <%#*<td>编辑出错原因:&nbsp;&nbsp;&nbsp;%>
+  <%#*</td>%>
+  <%#*</tr>%>
+  <%#*<tr>%>
+  <%#*<td>%>
+  <%#= text_area :auto_bgjob, :reason_info,:value => (@auto_bgjob.reason_info rescue ""),:rows => 10, :cols => 20 %>
+  <%#*</td>%>
+  <%#*</tr>%>
+  <%#*<tr>%>
+  <%#*<td></td>%>
+  <%#*<td align="right">%>
+  <%#= submit_tag "保存" %>
+  <%#*</td>%>
+  <%#*</tr>%>
+  </table>
+  <%# end %>
+<% end %>
+
+<% tab_content(:history, tabs) do %>
+  <div id="sub_items_history" >
+    <% table(@auto_bgjobs, %w{任务编号 测试用例 执行人 执行结果 创建时间 开始时间 结束时间 执行IP}) do |f, klass| -%>
+      <tr class="<%= klass %>">
+        <td><%= f.id %></td>
+        <td><%= f.testcase.title rescue "" %></td>
+        <td><%= f.exec_user ? f.exec_user.nickname : "" %></td>
+        <td><%= f.exec_result %></td>
+        <td><%= f.created_at.strftime("%Y-%m-%d %H:%M:%S") rescue "" %></td>
+        <td><%= f.started_at.strftime("%Y-%m-%d %H:%M:%S") rescue "" %></td>
+        <td><%= f.done_at.strftime("%Y-%m-%d %H:%M:%S") rescue "" %></td>
+        <td><%= f.exec_ip %></td>
+      </tr>
+    <% end %>
+    <%= will_paginate @auto_bgjobs, :class => "digg_pagination", :params => {:tab=>"history"}%>
+  </div>
+<% end %>
+
+<script type="text/javascript" src="/automan/SyntaxHighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="/automan/SyntaxHighlighter/scripts/shBrushRuby.js"></script>
+<link type="text/css" rel="stylesheet" href="/automan/SyntaxHighlighter/styles/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="/automan/SyntaxHighlighter/styles/shThemeDefault.css"/>
+<script type="text/javascript">
+  SyntaxHighlighter.config.clipboardSwf = '/automan/SyntaxHighlighter/scripts/clipboard.swf';
+  SyntaxHighlighter.config.tagName = 'textarea';
+  //SyntaxHighlighter.defaults['collapse'] = true;
+  SyntaxHighlighter.all();
+</script>

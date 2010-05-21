@@ -1,0 +1,260 @@
+/*
+ * 测试场景管理页面
+ * 作者：阮玲
+ */
+Ext.onReady(function(){
+
+    //所属类型名_id ， 隐藏类型
+    var belong_to = new Ext.form.Hidden({
+        fieldLabel: '属于',
+        name: 'belong_to'
+    });
+    
+    //所属类 下拉树形菜单
+    var user_combobox = new Ext.ComboxTree();
+    user_combobox.initialize(belong_to,'user_combobox_id');
+
+    //作者
+    var author_tag = new Ext.form.TextField({
+        fieldLabel: '作者',
+        name: 'author',
+        width: 100
+    });
+    
+    //场景名称
+    var name_tag = new Ext.form.TextField({
+        fieldLabel: '场景名称',
+        name: 'name',
+        width: 100
+    });
+
+    //------------------------执行结果下拉列表------------------------//
+    var exe_result = [ ['所有','所有'], ['passed','passed'], ['failed','failed'] ];
+    var exe_store = new Ext.data.SimpleStore({
+        fields: ['value','text'],
+        data: exe_result
+    });
+    var execute_result = new Ext.form.ComboBox({
+        name: 'result',
+        width: 100,
+        store: exe_store,
+        fieldLabel: '执行结果',
+        editable: false,
+        emptyText: '所有',
+        mode: 'local',
+        triggerAction: 'all',
+        valueField: 'value',
+        displayField: 'text'
+    });
+
+    //查询form
+    var form_panel = new Ext.FormPanel({
+        id: 'form_panel',
+	    layout: 'column',
+        url: '/auto/auto_test_scenarios/scenarios_grid_data',
+        width: '100%',
+	    items:[{ layout:'form', columnWidth:.3, border : false, items:[user_combobox, belong_to] },
+               { layout:'form', columnWidth:.2, border : false, items:[author_tag] },
+               { layout:'form', columnWidth:.2, border : false, items:[name_tag] },
+               { layout:'form', columnWidth:.2, border : false, items:[execute_result] },
+               { layout:'form', columnWidth:.1, border : false, items:[{ xtype:'button', text:'查询', handler: dosearch }] }
+              ]
+    });
+
+    //查询函数
+    function dosearch(){
+        if(form_panel.getForm().isValid()){
+            var searchdata;
+            form_panel.getForm().submit({
+                 method: 'GET',
+                 reset : false,
+                 scope: scenarios,
+                 params:{ start:0, limit:10}, //分页参数
+                 success:function(form,action){
+                    searchdata = Ext.util.JSON.decode(action.response.responseText);
+                    grid.getStore().loadData(searchdata,false); //重新加载grid中数据
+                   },
+                 failure:function(){ }
+            });
+        }
+    }
+
+    //加载下拉树形菜单中的数据
+    var url = window.location.href + '.json';
+    form_panel.getForm().load({
+       url: url,
+       method:'GET',
+       success:function(form, action) {
+             var resdata =  Ext.util.JSON.decode(action.response.responseText);
+             belong_to.setValue(resdata.belong_to);
+             user_combobox.setValue(resdata.name);
+        },
+       failure:function(form, action){
+             var resdata =  Ext.util.JSON.decode(action.response.responseText);
+             belong_to.setValue(resdata.belong_to);
+             user_combobox.setValue(resdata.name);
+       }
+     });
+
+    //----------------------------------------------Grid中使用到的函数------------------------------------------------------------------//
+    //新增测试场景
+    function add_scenarios(){   
+        openTag(window.parent.add_scenario,"/auto/auto_test_scenarios/new");
+    }
+
+    //编辑测试场景
+    function edit_scenarios(){
+        var selected = grid.getSelectionModel().getSelected();
+        if(selected) {
+               openTag(window.parent.edit_scenario,'/auto/auto_test_scenarios/edit/'+ selected.get('id'));
+        }
+        else {
+               Ext.Msg.show({ title:"提示", width:250, buttons: Ext.MessageBox.OK, msg: "请先选择测试场景！", modal:false });
+        }      
+    }
+
+    //删除测试场景
+    function delete_scenarios(){
+        var selected = grid.getSelectionModel().getSelected();
+        if(selected) {
+             if(confirm('你确定要删除?')) {
+                 Ext.Ajax.request({
+                    method:'GET',
+                    url: '/auto/auto_test_scenarios/delete/'+ selected.get('id') + '/' + gridstore.lastOptions.params.start,
+                    callback: function(request, success, response) {  gridstore.reload(); } //重新加载grid数据
+                 });
+             }
+        }
+        else {
+              Ext.Msg.show({ title:"提示", width:250, buttons: Ext.MessageBox.OK, msg: "请先选择测试场景！", modal:false });
+        }
+    }
+
+    //查看场景日志
+    function scenarios_log(){
+        var selected = grid.getSelectionModel().getSelected();
+        if(selected) {
+             Ext.Ajax.request({
+                   url : '/auto/auto_test_tasks/if_contain/'+selected.get('id') + '/scenario',
+                   callback : function(options, success, response) {
+                         var text = Ext.util.JSON.decode(response.responseText);
+                         if(text.is_empty == true)
+                             Ext.Msg.show({ title:"提示", width:250, buttons: Ext.MessageBox.OK, msg: "该测试场景目前没有日志！", modal:false });                        
+                         else
+                             openTag(window.parent.taskNode,"/auto/auto_test_tasks/list/"+selected.get('id')+"/scenario");
+                    }
+             });
+        }
+        else{
+             Ext.Msg.show({ title:"提示", width:250, buttons: Ext.MessageBox.OK, msg: "请先选择测试场景！", modal:false });
+        }
+    }
+    
+    //测试计划（新建场景的测试计划）
+    function test_plan(){
+        var selected = grid.getSelectionModel().getSelected();
+        if(selected) {
+            openTag(window.parent.planNode,"/auto/auto_test_plans/new/"+selected.get('id')+"/scenario");
+        }
+        else {
+            Ext.Msg.show({ title:"提示", width:250, buttons: Ext.MessageBox.OK, msg: "请先选择测试场景！", modal:false });
+        }
+    }
+
+    //运行（新增测试任务）
+    function run_scenarios(){
+        var selected = grid.getSelectionModel().getSelected();
+        if(selected) {
+            openTag(window.parent.taskNode,"/auto/auto_test_tasks/new/"+selected.get('id')+"/scenario");
+        }
+        else {
+            Ext.Msg.show({ title:"提示", width:250, buttons: Ext.MessageBox.OK, msg: "请先选择测试场景！", modal:false });
+        }
+    }
+    //------------------------------------------------------end--------------------------------------------------------------------//
+
+    //-------------------------------------------------grid定义--------------------------------------------------------------------//
+    var proxy=new Ext.data.HttpProxy({url:'/auto/auto_test_scenarios/scenarios_grid_data'}); //gird中的请求url
+  
+    var cm = new Ext.grid.ColumnModel([ //grid的列
+             {header: "ID", dataIndex: 'id', sortable: true, width:40},
+             {header: "场景名称", dataIndex: 'name', sortable: true, width: 200},
+             {header: "Result",dataIndex: 'result', width:50},
+             {header: "类型", dataIndex: 'typ', width: 45},
+             {header: "所属类名", dataIndex: 'belong_to'},
+             {header: "作者", dataIndex: 'author', sortable: true, width: 45},
+             //{header: "脚本路径", dataIndex: 'script_path', sortable: true},
+             {header: "脚本", dataIndex: 'show_script', width: 45},
+             {header: "创建人",dataIndex: 'created_by', sortable: true, width: 45},
+             {header: "修改时间",dataIndex: 'modified_time', sortable: true, width: 100},
+             {header: "发布",dataIndex: 'is_available', sortable: true, width: 45},
+             {header: "描述",dataIndex: 'desc', width: 200},
+             {dataIndex: 'suite_id_detail', hidden : Boolean}            
+         ]);
+
+     var reader=new Ext.data.JsonReader(//解析后台返回的json数据，显示在页面上
+         { root: 'text',  totalProperty: 'total' },
+         [ {name: 'id',              mapping: 'auto_test_scenario.id'},
+           {name: 'name',            mapping: 'auto_test_scenario.name'},
+           {name: 'typ',             mapping: 'auto_test_scenario.typ'},
+           {name: 'belong_to',       mapping: 'auto_test_scenario.belong_to'},
+           {name: 'author',          mapping: 'auto_test_scenario.author'},
+//           {name: 'script_path',     mapping: 'auto_test_scenario.script_path'},
+           {name: 'show_script',     mapping: 'auto_test_scenario.svn_script'},
+           {name: 'created_by',      mapping: 'auto_test_scenario.created_by'},
+           {name: 'modified_time',   mapping: 'auto_test_scenario.modified_time_fomat'},
+           {name: 'is_available',    mapping: 'auto_test_scenario.is_available'},
+           {name: 'desc',            mapping: 'auto_test_scenario.desc'},
+           {name: 'suite_id_detail', mapping: 'auto_test_scenario.suite_id_detail'},
+           {name: 'result',          mapping: 'auto_test_scenario.result'}
+         ]
+     );
+         
+     var gridstore=new Ext.data.Store({
+         proxy:proxy,
+         reader:reader,
+         remoteSort:true
+     });
+     
+     var grid = new Ext.grid.GridPanel({
+         store: gridstore,
+         cm: cm,
+         sm: new Ext.grid.RowSelectionModel({singleSelect:true}), //不允许多选
+         enableHdMenu : false,
+         viewConfig: { forceFit: true },
+         height: 568,
+         width: "100%",
+         tbar:[{ text:'添加', tooltip:'创建新场景', handler: add_scenarios, iconCls:'add' }, '-',
+               { text:'编辑', tooltip:'修改场景信息', handler: edit_scenarios, iconCls:'edit' },'-',
+               { text:'删除', tooltip:'删除场景信息', handler: delete_scenarios, iconCls:'remove' },'-',
+               { text:'运行', tooltip:'运行测试场景', handler: run_scenarios, iconCls:'run' },'-',
+               { text:'日志', tooltip:'查看场景日志', handler: scenarios_log, iconCls:'log' },'-',
+               { text:'测试计划', tooltip:'指定测试计划', handler: test_plan, iconCls:'plan' },'->'],
+         bbar: new Ext.PagingToolbar({ pageSize: 10, store: gridstore, displayInfo: true, refreshText:"刷新", displayMsg: '第{0} 到 {1} 条数据 共{2}条', emptyMsg: "没有数据" })
+     });
+     grid.on('celldblclick',function(grid,rowIndex,columnIndex,e){
+         if(columnIndex == 6){
+             Ext.Msg.alert("脚本路径",grid.getStore().getAt(rowIndex).get('script_path'));
+         }
+     });
+
+     gridstore.load({//向后台发送请求，加载数据
+         params:{start:0, limit:10}, //分页参数
+         callback: function(records,o,s){ }
+     });
+     
+     gridstore.on('beforeload',function(){ //点击前后翻页，或刷新按钮时触发
+         this.baseParams = { //设置与后台交互的参数
+              name: name_tag.getValue(),
+              belong_to: belong_to.getValue(),
+              author:  author_tag.getValue(),
+              result: execute_result.getValue(),
+              suite_id_detail: gridstore.getAt(0).get('suite_id_detail')
+         }
+     }); 
+     //-------------------------------------------------end--------------------------------------------------------------------//
+     var scenarios = new Ext.Panel({
+            renderTo: '<%= params[:renderTo]%>', //将items中的元素加载到id=scenarios的div中
+            items:[form_panel,grid]
+     });
+}); 

@@ -1,5 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
- 
+  #map.root :controller => 'pm_libs'
+
   map.resources :pm_libs do |lib|
     lib.resources :pm_folders
   end                         
@@ -9,6 +10,30 @@ ActionController::Routing::Routes.draw do |map|
   end                                       
   
   map.resources :pm_elements, :collection=>["element_live_tree_data"]
+  
+  map.namespace :auto do|auto|
+		auto.resources :testsuites, :collection => {:pick_down=>[:post],:pick_up=>[:get,:post],:pick_up_do=>[:post],:testplan => [:get, :post],:cancel => :get,:list_by_machine => [:get,:post]}, :member => {:editplan => :get,:updateplan => :put} do |suite|
+			suite.resources :bgjob_suites
+		end
+		auto.resources :testcase_scripts, :bgjob_suites
+		auto.resources :testcases, :member => [:show_testcase], :collection => [:search]
+    auto.resources :home, :collection => [:main, :index, :frame_left, :frame_mid, :tree, :tree_left, :gen_tree, :console]
+		auto.resources :bgjobs, :member=>[:log, :job_done, :create_job], :collection => [:get_job]
+  	auto.resources :testcase_categories, :member=>[:testcases, :testcase_list], :collection => { :tree => [:get,:post] }
+  end
+  
+  map.namespace :admin do|admin|
+		admin.resources :jobs
+		admin.resources :daemons, :collection=>{:sync_all=>[:get, :post]}
+		admin.resources :products
+    admin.resources :product_lines, :has_many => :products
+    admin.resources :testsuites_categories,:collection => {:list => [:get,:post],:report =>[:get,:post],:testplan => :get,:make_plan => [:get,:post]}
+	end
+	
+	map.connect 'projects/:project_id/testsuites/:action', :controller => 'auto/testsuites'
+
+	map.connect 'home/modules.js', :controller=>"home", :action => "modules"
+  map.root :controller => "home", :action => "frame", :m => "auto"
 
   # The priority is based upon order of creation: first created -> highest priority.
 

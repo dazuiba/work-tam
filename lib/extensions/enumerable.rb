@@ -11,6 +11,21 @@ require "extensions/_base"
 #
 ExtensionsProject.implement(Enumerable, :build_hash) do
   module Enumerable
+  	
+  	def build_ordered_hash(&block)
+  		require "active_support"
+      result = ActiveSupport::OrderedHash.new
+      self.each do |elt|
+        key, value = if block_given?
+        	yield elt
+      	else
+      		[elt[0], elt[1]]
+    		end
+        result[key] = value
+      end
+      result
+    end
+  	
     #
     # Like <tt>#map</tt>/<tt>#collect</tt>, but it generates a Hash.  The block
     # is expected to return two values: the key and the value for the new hash.

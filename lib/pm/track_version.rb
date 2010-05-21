@@ -49,5 +49,52 @@ module Pm
 	    end
 	    
 	  end 
+	  
+	  
 	end
+	
+	class LibVersion  
+	  include Automan::Version	    
+		def initialize(page_lib)
+			@pm_lib = page_lib
+		end
+		
+		def version_tree
+			root = lib_to_vnode @pm_lib
+			@pm_lib.folder_root.children.each{|e|add_node(root, e)}
+			root
+		end
+		
+		def add_node(parent_node, db_node)
+			current_node = folder_to_vnode(db_node)
+			parent_node.add_nodes(current_node)
+			
+			if !db_node.children.empty?
+				db_node.children.each{|e|add_node(current_node, e)}
+			elsif !db_node.pm_models.empty?
+				db_node.pm_models.each{|e|current_node.add_nodes(model_to_vnode e)}
+		  end
+		end
+		
+		
+		private
+		
+		def lib_to_vnode(pm_lib)
+			folder_root = pm_lib.folder_root
+			VersionRoot.new(version(folder_root), pm_lib.name)
+		end
+		
+		def folder_to_vnode(folder)
+			FolderNode.new(version(folder), folder.name )
+		end     
+		
+		def model_to_vnode(model)
+			FileNode.new(version(model), model.xml_file_name, model.xml_file_url )
+		end
+		
+		def version(obj)
+			obj.updated_at.to_s(:db)
+		end
+		
+	end  
 end

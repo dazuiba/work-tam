@@ -1,0 +1,87 @@
+<script type="text/javascript" src="/javascripts/common.js"></script>
+<script type="text/javascript">
+  function checkForm(){
+  	var arr_exec = document.getElementsByName("suites_and_case[]");
+    var size = arr_exec.length
+	var flag = false
+    for(var i=0;i<size;i++){
+      if (arr_exec[i].checked){
+			flag = true;
+			break;
+	  }
+    }
+	if (!flag){
+		alert("请选择上架脚本")
+	}
+	return flag;
+  }
+</script>
+
+<%= render :partial => "auto/sidebar" %>
+<% form_tag({:action=>"pick_up"}) do %>
+<table align="center">
+    <tr>
+        <td>
+            <% if @product_line_id %>
+            产品线: <%= select_product_tag "product_line",@product_line_id.to_i %>
+            <% else %>
+            产品线: <%= select_product_tag "product_line" %>
+            <% end %>
+        </td>
+        <td>
+            用例下架人: <%= select_pick_down_user "pick_down_user",@pick_down_user %>
+        </td>
+        <td>
+            下架时间:<%= text_field_tag("pick_down_at" ,@pick_down_at.nil? ? "": @pick_down_at,{:readOnly => true}) %>
+            <%= calendar_for "pick_down_at" %>
+            <br/>
+        </td>
+        <td>
+            <%= submit_tag "查询" %>
+        </td>
+    </tr>
+</table>
+<% end %>
+<% tabs = [{:logs => "回归用例下架管理"}] %>
+<%= tabs_header(tabs) %>
+<% tab_content(0, tabs) do %>
+<div id="job-list">
+    <% if @pick_down_cases.size == 0 %>
+    <p class="nodata">
+        <%= l(:label_no_data) %>
+    </p>
+    <% else %>
+	<% form_tag({:action=>"pick_up_do"}) do %>
+    <% table(@pick_down_cases, %w{ 上架 产品线  测试集 测试用例 用例下架人 下架时间}) do |pick_down_case, klass| -%>
+    <tr class="<%= klass %>">
+        <td class="id">
+            <%= check_box_tag("suites_and_case[]","#{pick_down_case.attributes["ts_id"]}_#{pick_down_case.attributes["tc_id"]}") %>
+        </td>
+        <td>
+            <%= pick_down_case.attributes["name"] %>
+        </td>
+        <td>
+            <%= pick_down_case.attributes["ts_title"] %>
+        </td>
+        <td>
+            <%= pick_down_case.attributes["tc_title"] %>
+        </td>
+        <td>
+            <%= pick_down_case.attributes["nickname"] %>
+        </td>
+        <td>
+            <%= date_format pick_down_case.attributes["pick_down_at"] %>
+        </td>
+    </tr>
+    <% end %>
+		<%=hidden_field_tag "pick_down_user",@pick_down_user%>
+		<%=hidden_field_tag "product_line",@product_line_id %>
+		<%=hidden_field_tag "pick_down_at",@pick_down_at %>
+		<input type="button" onclick="selectAll('suites_and_case[]')" value="全选">
+		<input type="button" onclick="unselectAll('suites_and_case[]')" value="反选">
+		<%= submit_tag "上架",:onclick => "return checkForm()" %>
+    <%= will_paginate @pick_down_cases,:params => {:pick_down_user=>@pick_down_user,:product_line=>@product_line_id,:pick_down_at=>@pick_down_at} %>
+	<% end %>
+    <% end %>
+</div>
+<% end %>

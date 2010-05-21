@@ -1,0 +1,28 @@
+<h1>编辑产品线</h1>
+
+<% form_for(@product_line) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :id %><br />
+    <%= f.text_field :id %>
+  </p>
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :desc %><br />
+    <%= f.text_field :desc %>
+  </p>
+  <p>
+    <%= f.label :id_string %><br />
+    <%= f.text_field :id_string %>
+  </p>
+  <p>
+    <%= f.submit '更新' %>
+  </p>
+<% end %>
+
+<%= link_to '显示', @product_line %> |
+<%= link_to '返回', admin_product_lines_path %>

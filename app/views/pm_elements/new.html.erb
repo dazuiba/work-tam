@@ -1,11 +1,12 @@
-<h1>New pm_element</h1>
+<h1>New <%= @pm_element.leaf ? "Element" : "SubModel"%></h1>
 
 <% form_for(@pm_element) do |f| %>
   <%= f.hidden_field "parent_id"%>           
 	<%= f.hidden_field "leaf"%>
   <%= render :partial => "form", :locals => {:f => f} %>
   <p>
-    <%= f.submit 'Create' %>
+    <%= f.submit '保存' %>   
+	  <%= f.submit '保存并回父级' %>
   </p>
 <% end %>
                                                  

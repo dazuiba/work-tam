@@ -1,0 +1,48 @@
+<%= render :partial => 'sidebar', :locals=>local_assigns %>
+<% table(@arr_auto_overview, %w{产品线 自动化用例总数 当前自动化总数 通过数 失败数 通过率 未执行数 本周活跃度  详情 }) do |auto_overview, klass| -%>
+    <tr class="<%= klass %>">
+        <td>
+            <%= auto_overview['product_line_name'] %>
+        </td>
+        <td>
+        	<font color="green">
+            <%= auto_overview['product_line_testcase_count'] %>
+			</font>
+        </td>
+		<td>
+        	<font color="green">
+            <%= auto_overview['auto_testcase_count'] %>
+			</font>
+        </td>
+        <td>
+        	<font color="green">
+            <%= auto_overview['passed_count'] %>
+			</font>
+        </td>
+        <td>
+        	<font color="red">
+            <%= auto_overview['failed_count'] %>
+			</font>
+        </td>
+        <td>
+        	<font color="green">
+            <%= auto_overview['passed_rate'] %>
+			</font>
+        </td>
+		<td>
+			<font color="red">
+            <%= auto_overview['unexec_testcase_count'] %>
+			</font>
+        </td>
+		<td>
+			<font color="green">
+            <%= auto_overview['activation_count'] %>
+			</font>
+        </td>
+        <td>
+        	<% if auto_overview['product_line_id'] %>
+            <%= link_to '详情', { :action => 'detail', :id =>auto_overview['product_line_id']}  %>
+			<% end %>
+        </td>
+    </tr>
+<% end %>

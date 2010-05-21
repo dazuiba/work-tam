@@ -1,0 +1,11 @@
+ <div id="sub_items_case">
+    <% table(@case_bgjobs, %w{ID 测试用例名称 IP}) do |c, klass| -%>
+      <tr class="<%= klass %>">
+        <td><%= c.id %></td>
+        <td><%= case_name(c) %></td>
+        <td><%= c.exec_ip %></td>
+      </tr>
+    <% end %>
+       <%#= will_paginate @case_bgjobs%>
+  </div>
+

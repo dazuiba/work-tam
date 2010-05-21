@@ -1,0 +1,13 @@
+<% table(@users, %w{花名 部门 管理员}) do |user, klass| -%>
+  <tr class="<%= klass %>">
+		<td><%= link_to h(user.nickname),{:action =>:edit,:id => user} %></td>
+		<td><%=  h(user.department) %></td>
+		<td><% if user.admin%>
+			是
+			<% else %>
+			否
+		<% end %>			
+		</td>
+  </tr>
+<% end %>
+	<p class="pagination"><%= will_paginate @users%></p>			

@@ -1,0 +1,42 @@
+<% if testcases.empty? %>
+  <p class="nodata"><%= l(:label_no_data) %><br>  还没有编写脚本？ 或者编写的脚本没有做SVN提交？<br>
+    TAM只会展示编写过脚本的用例。
+  </p>
+<% else %>
+  <table class="list testcases" style="text-align:left">
+    <thead><tr>
+        <th colspan=2 align="center">用例编号</th>
+        <th align="center">级别</th>
+        <th align="center">维护人</th>
+        <th align="left">用例</th>
+        <th align="left">最后运行时间</th>
+        <th align="left">父级</th>
+        <th align="left">操作</th>
+      </tr></thead>
+    <tbody>
+      <% for testcase in testcases %>
+        <tr id="testcase-<%= testcase.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> %>">
+          <td class="id">
+            <% checked = @testsuite.new_record? ? true : @testsuite.testcase_ids.include?(testcase.id)%>
+            <%= check_box_tag("testcase_ids[]", testcase.id, checked,  :id => testcase.id )%>
+          </td>
+          <td class="id">
+            <%= link_to "##{testcase.short_id}", :controller => 'testcases', :action => 'show',  :id => testcase %>
+          </td>
+          <td align="center" width="50"><%= testcase.priority %></td>
+          <td align="center" width="50"><%= testcase[:designer] %></td>
+          <td width="300"><%= link_to h(testcase.title), {:controller => 'testcases', :action => 'show', :id => testcase},{:title=>"#{testcase.script.script_path rescue ''}"} %></td>
+          <td width="150"><% if Auto::TestcaseScript.current_tc_state(testcase.id)%>
+              <%= date_format(Auto::TestcaseScript.current_tc_state(testcase.id).done_at) %>
+            <% end %>
+          </td>
+          <td width="100"><%= h testcase.category.title if testcase.category%></td>
+          <td><%= link_to_popup("运行",create_job_auto_bgjob_path(testcase))  %></td>
+        </tr>
+      <% end %>
+      <%- if controller.controller_name=="testsuites" and controller.action_name=="show" -%>
+        <%= will_paginate testcases, :class => "digg_pagination", :params => {:tab => "testcases"} %>
+      <%- end -%>
+    </tbody>
+  </table>
+<% end %>

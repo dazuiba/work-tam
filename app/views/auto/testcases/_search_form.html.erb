@@ -1,0 +1,31 @@
+<form action="/auto/testcases/search" method="get" onsubmit="return checkform()">
+  <table>
+    <tr>
+      <td>用例ID:
+        <input id="tc_id" name="tc_id" size="10" type="text" />
+      </td>
+      <td>用例标题:
+        <input id="tc_title" name="tc_title" size="20" type="text" />
+      </td>
+      <td>
+        <input id="tc_cid" name="tc_cid" type="hidden" value="<%= @testcase_category_id %>" />
+      </td>
+      <td>
+        <input type="submit" value="搜索" />
+      </td>
+    </tr>
+  </table>
+</form>
+<script type="text/javascript">
+  function checkform(){
+    tc_id = $F("tc_id").strip();
+    tc_title = $F("tc_title").strip();
+    if (tc_id=="" && tc_title==""){
+      alert("请填写用例ID或者用例标题！");
+      return false;
+    }
+    else{
+      return true;
+    }
+  }
+</script>

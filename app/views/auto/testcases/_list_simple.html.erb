@@ -1,0 +1,28 @@
+<% if testcases && testcases.any? %>
+<% form_tag({}) do %>
+	<table class="list testcases">		
+		<thead><tr>
+		<th>#</th>
+		<th><%=l(:field_tracker)%></th>
+		<th><%=l(:field_subject)%></th>
+		</tr></thead>
+		<tbody>	
+		<% for testcase in testcases %>
+		<tr id="testcase-<%= testcase.id %>" class='hascontextmenu <%= cycle('odd', 'even') %> %>'>
+			<td>
+			    <%= check_box_tag("ids[]", testcase.id, false, :style => 'display:none;') %>
+				<%= link_to testcase.id, :controller => 'testcases', :action => 'show', :id => testcase %>
+			</td>
+			<td><%=h testcase.category.title %> - <%= link_to_user testcase.auto_designer %><br />
+                <%= testcase.priority %> - <%= format_time(testcase.updated_at) %></td>
+			<td class='subject'>
+                <%= link_to h(testcase.title), :controller => 'testcases', :action => 'show', :id => testcase %>
+            </td>
+		</tr>
+		<% end %>
+		</tbody>
+	</table>
+<% end %>
+<% else %>
+	<p class='nodata'><%= l(:label_no_data) %></p>
+<% end %>

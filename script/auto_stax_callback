@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+require File.dirname(__FILE__)+"/../lib/twork/ext/string"
+require 'net/http'
+class AutoStaxCallback
+	EXEC_RESULT = {0=> 'passed', 1=>"sc_failed", 2=>"tc_failed"}
+	attr_accessor :post_url, :args
+	
+	def initialize(options)
+		self.post_url = options[:post_url]
+		self.args = options[:args]
+		@log_file=options[:log]||"log/callback.log"
+	end
+	
+  def run
+    log("Start Callback... #{args.inspect}")
+    begin
+        i = 0
+        arg_list = Hash.new
+        while (i < args.length)
+            arg_list[args[i]] = args[i+1]
+            i += 2
+        end
+        params={}
+        params[:id] = arg_list['--bgjob_id']
+        params[:result_log] = arg_list['--output']||"".to_utf8
+        params[:exec_result] = EXEC_RESULT[arg_list['--exitcode'].to_i]
+        response = Net::HTTP.post_form(URI.parse(post_url),params)
+        log "response:#{response} is test by shidun"
+        log "Callback For #{params[:id]}, Result: #{params[:exec_result]}"
+    rescue Exception => e
+        log "Callback For #{params[:id]}, Error : #{e.message}"
+        log %[Error Stack : #{e.backtrace.join("\n")}]
+    end
+  end
+	private
+	
+	def log(msg)
+		File.open(@log_file,"a"){|e|e.puts "#{Time.now.strftime('%Y/%m/%d %H:%M:%S')}: #{msg}" }
+	end
+end
+
+AutoStaxCallback.new(:post_url=> "http://localhost:3003/auto/bgjobs/job_done", :args=> ARGV).run

@@ -1,0 +1,62 @@
+<style>
+  .notice2{
+    color:red;
+  }
+</style>
+
+<%#= include_extjs_resources(:extjs) %>
+
+<%= breadcrumb link_to(@project.product_line.name,:action => "index", :line_id => @project.line_id), @project.name  %> 
+<% tabs = [{:info=>"基本信息"},{:members => '成员管理'}, {:qc_sync => "QC同步"}] %>
+
+<%#= tabs_header(tabs) %>
+<% params[:tab]||= 'members' %>
+<div class="tabs">
+  <ul>
+    <li><a id="tab-info" class="<%= (params[:tab].to_s != 'info' ? nil : 'selected') %>" href="?tab=info">基本信息</a></li>
+    <li><a id="tab-members" href="?tab=members" class="<%= (params[:tab].to_s != 'members' ? nil : 'selected') %>">成员管理</a></li>
+    <li><a id="tab-qc_sync" href="?tab=qc_sync" class="<%= (params[:tab].to_s != 'qc_sync' ? nil : 'selected') %>">QC同步</a></li>
+  </ul>
+</div>
+ 
+ 
+<% tab_content(:info, tabs) do%>
+  <% labelled_tabular_form_for @project, :url => { :action => "edit", :id => @project},  :method => "post" do|f|%>
+    <%= render :partial => "form", :locals => {:f => f} %>
+    <%= submit_tag %><br/>
+  <% end %>
+<% end %>
+
+
+<% tab_content(:members, tabs) do%>
+  <%= render :partial => "admin/projects/settings/members" %>
+<% end %>
+
+<% if @project.qc_db %>
+<% tab_content(:qc_sync, tabs) do%>
+  <p> <label>qc的位置：</label><%= @project.qc_path %> </p>
+  <p> <label>对应的qc数据库：</label><%= @project.qc_db  %> </p>
+  <div class="box">
+    <% if @project.auto? %>
+      <div style ="notice2" >已经有QC项目的内容， 项目ID：<%= @project.id %> </div>
+      <%- if !@testcases.nil? -%>
+        一旦你执行同步操作，以下用例会被删除：
+        <%- for tc in @testcases -%>
+          <%= tc.title  %>
+        <%- end -%>
+      <%- end -%>
+      <%=	button_to "重新同步", { :action => "qc_import" , :id=> @project},
+        :confirm => "Are you sure?", :method => :post  %>
+    <% else %>
+      <div class="notice2">尚未与QC同步</div>
+      <%=	button_to "与QC同步", { :action => "qc_import", :id=> @project},
+        :confirm => "Are you sure?", :method => :post  %>
+    <% end %>
+
+  </div>
+
+<% end %>
+<% end %>
+
+
+<%= link_to "删除", {:action => "destroy", :id => @project}, {:method => "delete", :confirm => "相当危险！！！确定？"} %>

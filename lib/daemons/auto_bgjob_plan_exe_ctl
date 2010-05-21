@@ -1,0 +1,2 @@
+FILE_NAME = 'auto_bgjob_plan_exe.rb'
+require File.dirname(__FILE__)+'/ctrl_helper.rb'

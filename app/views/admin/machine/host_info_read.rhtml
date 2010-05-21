@@ -1,0 +1,26 @@
+<% form_tag({:action=>"host_info_read"}) do %>
+<table>
+     <tr>
+        <td>查询host的ip:</td>
+        <td>
+            <%=text_field_tag "host_ip" %><%= submit_tag "查询",:disable_with => '正在处理...' %>
+        </td>
+    </tr>
+</table>
+
+
+<% end %>
+<% form_tag({:action=>"host_info_update"}) do %>
+<table>
+	<tr>
+        <td>当前host绑定:</td>
+        <td>    
+           <%=text_area_tag "host_info" , @exec_host_info, :size => "30x50"%>
+            <%=hidden_field_tag "host_ip",@ip %>
+           <br/>
+           <%= submit_tag "修改",:disable_with => '正在处理...' %>
+        </td>
+    </tr>
+</table>
+
+<% end %>

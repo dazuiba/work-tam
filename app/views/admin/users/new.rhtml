@@ -1,0 +1,7 @@
+<% form_tag  do -%>
+  <%= render :partial => 'form' %>
+  <% round_corner_action_bar do %>
+	  <%= submit_tag "保存", :class => 'default' %>
+	  <%= button_to_function '放弃', "window.location = '#{url_for(:action => 'list')}'", :name => 'cancel' %>
+  <% end %>
+<% end -%>

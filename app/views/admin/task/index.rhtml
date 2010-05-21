@@ -1,0 +1,6 @@
+<% table(@auto_bgjobs, %w{Job}) do |auto_bgjob, klass| -%>
+  <tr class="<%= klass %>">
+    <td><%= h(auto_bgjob.testcase.title) rescue "" %></td>
+  </tr>
+<% end %>
+<p class="pagination"><%= will_paginate @auto_bgjobs%></p>	

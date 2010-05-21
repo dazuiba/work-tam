@@ -1,0 +1,27 @@
+<%@title="欢迎使用!"%>
+<div id="graphic-dialog-container">
+  <div id="graphic-dialog">
+    <div id="graphic-dialog-input">
+      <h2>请登录</h2>
+
+      <% form_tag({:action=> "login"}, {:id => 'login_form'}) do %>
+        <p><label for="user_login">用户名:<span style='color:red;'>测使用：admin</span></label>
+          <%= text_field_tag 'login', @login||'admin', :class => 'width-full' %></p>
+          <p><label for="user_password">用户密码:<span style='color:red;'>测使用：admin</span></label>
+        <input value='admin' type="password" name="password" id="user_password" value="" class="width-full" /></p>
+        <p><input type="checkbox" name="remember_me" id="remember_me"/>&nbsp;在这台电脑上记住我</p>
+        <p><%= submit_tag '进入 &#187;', :class => 'default' %></p>
+        <p>
+          <%= render_help_link('Sign In Page', :class => 'page-help-at-login')%>
+          <%= link_to_function 'Forgotten your password?', 
+                             "$('login_form').action = #{url_for(:controller => 'profile', :action => 'forgot_password').to_json};
+                              $('login_form').submit()" if supports_password_recovery?%>
+        </p>
+        <%= clear_float %>
+        <%= hidden_field_tag 'return_to',params[:return_to]%>
+      <% end %>   
+    </div>
+    
+    <%= image_tag('graphic-dialog-left.png', :alt => 'Welcome') %><%= image_tag('graphic-dialog-mid.jpg', :alt => 'Welcome to Bingle') %>
+  </div>
+</div>

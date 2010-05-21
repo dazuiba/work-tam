@@ -1,0 +1,40 @@
+<script type="text/javascript">
+  function MakeStrategy(){
+    if ($("redo").checked){
+      Element.show("strategy");
+    }
+    else{
+      Element.hide("strategy");
+    }
+  }
+
+  window.onload=function()
+  {
+    MakeStrategy()
+  }
+</script>
+<% labelled_tabular_form_for :bgjob_suite, @bgjob_suite, :url => {:action=>"create"} do |f| %>
+
+  <%= error_messages_for 'bgjob_suite' %>
+
+  <div class="box">
+    <!--[form:bgjobsuites]-->
+    <p><%= f.text_field :title, :disabled=>true%></p>
+
+    <p><%= select_machine_tag "bgjob_suite[exec_ip]", @testsuite.plan_ip, :local => true%></p>
+    <!--[eoform:project]-->
+  </div>
+  <%= check_box_tag(:is_update_script, 1, checked = true) %>更新脚本<br>
+  <%= check_box_tag("redo", "strategy",false,:onclick => "MakeStrategy()") %>如果测试集最终执行失败，请重新运行该测试集失败用例，最多可以运行
+  <div id="strategy" style="display:none">
+    <p><%= select("bgjob_suite","redo_count", (0..5))-%>次</p>
+  </div>
+  <%= submit_tag l(:button_save), :confirm=>"要重新执行#{@bgjob_suite.testsuite.included_testcases_count}个用例，会耗时很长，确定执行？" %>
+<% end %>
+
+
+
+
+
+
+

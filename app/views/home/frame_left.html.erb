@@ -1,0 +1,84 @@
+<html><head>
+		<title></title>
+		<meta content="text/html; charset=gb2312" http-equiv="Content-Type">
+		<%= stylesheet_link_tag '/menu/menu.css', :media => 'all' %>
+			<meta content="600" http-equiv="REFRESH">
+			<style type="text/css"> body { margin: 0px; padding: 2px; background-image: url(/menu/images/frame_bg.gif); background-attachment: fixed; background-position: right; background-repeat: repeat-y; scrollbar-face-color: white; scrollbar-highlight-color:D4D4D2; scrollbar-3dlight-color: white; scrollbar-shadow-color:D4D4D2; scrollbar-darkshadow-color: white; scrollbar-track-color: white; scrollbar-arrow-color:D4D4D2; }
+	.out { padding: 1em; height: 100%; overflow: auto; text-align: left; }
+	b { padding-bottom:5px; }
+	</style>
+	</head><body>
+		<script type="text/javascript" language="javascript">
+function objshow(divid,img1,img2,Flag)
+{
+    var adv,advt;
+	adv=document.getElementById(divid);
+	img1=document.getElementById(img1);
+	img2=document.getElementById(img2);
+	 if(adv.style.display=="none") {
+                         adv.style.display="";
+                         if (Flag==0)
+                         {
+						 img1.src="/menu/images/midminus.gif";
+						 }
+						 else
+						 {
+						 img1.src="/menu/images/midminus.gif";
+						 }
+						 img2.src="/menu/images/open2.gif";
+						 
+
+              } else {
+                         adv.style.display="none";
+                         if (Flag==0)
+                         {
+						 img1.src="/menu/images/midclose.gif";
+						 }
+						 else
+						 {
+						 img1.src="/menu/images/midclose.gif";
+						 }
+						 img2.src="/menu/images/close.gif";
+        }
+ 
+
+}
+
+
+
+		</script>
+		<div class="out">
+			<% root_menu = Menu.find(params[:m]) %>
+			<div class="left_4">
+				<div class="left_mainpage">
+					<img src="/menu/images/tree_root.gif"> &nbsp;<a href="<%= root_menu.inner_url %>" target="mainFrame"><%= root_menu.name %></a>
+				</div>
+
+				<% root_menu.children.each_with_index do|parent, p_index|  %>
+					<% call_js = "objshow('left_4_#{p_index}_3','img_4_#{p_index}_1','img_4_#{p_index}_2',0);" %>
+				<div class="left_4_1">
+					<div class="menu">
+						<div class="menuimg">
+					    <img onclick="<%= call_js %>" id="img_4_<%= p_index %>_1" src="/menu/images/midminus.gif">
+					    <img onclick="<%= call_js %>" id="img_4_<%= p_index %>_2" src="/menu/images/open2.gif">
+					  </div>
+					  <div class="menutext">
+					  	<a href="javascript:<%= call_js %>"><%= parent.name %></a>			  	
+				  	</div>		    
+		      </div>
+		    	
+		      <% if parent.children.size>0 %>
+			      <div id="left_4_<%= p_index %>_3" style="" class="left_4_3">
+			      	<% parent.children.each do|child| %>
+				    	<div class="left_board  bottom">
+				    		<%= link_to child.name, url_for(child.url), :target => "mainFrame"%>
+			    		</div>
+			    		<% end %>
+	    			</div>
+    			<% end %>
+  	  	</div>
+				<% end  %>
+		</div>
+		<div></div>
+		<div style="display: none;"></div>
+	</body></html>

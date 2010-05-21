@@ -1,0 +1,22 @@
+<%= render :partial => "auto/sidebar" %>
+<% form_for :machine, @machine, :url => { :action => "new" }   do |f| %>
+	IP地址：<%= f.text_field :ip %><br/>
+	<%= f.submit "提交" %><p/>
+<% end %>
+<%if @machines.length!=0%>
+<% table( @machines , %w{拥有者 ip }) do |machine, klass| -%>
+		  	<tr class="<%= klass %>">
+				<td><%=  h(machine.auto_user.name) %></td>
+				<td><%=  h(machine.ip) %></td>
+		  	</tr>
+				<% end %>
+<%else%>
+		<e>没有记录<e/>
+<%end%>
+
+
+
+
+
+
+

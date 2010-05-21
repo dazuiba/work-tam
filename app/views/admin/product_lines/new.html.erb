@@ -1,0 +1,27 @@
+<h1>新建产品线</h1>
+
+<% form_for(@product_line) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    ID<br />
+    <%= f.text_field :id %>
+  </p>
+  <p>
+    名称<br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    描述<br />
+    <%= f.text_field :desc %>
+  </p>
+  <p>
+    id_string<br />
+    <%= f.text_field :id_string %>
+  </p>
+  <p>
+    <%= f.submit '创建' %>
+  </p>
+<% end %>
+
+<%= link_to '返回', admin_product_lines_path %>

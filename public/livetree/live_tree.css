@@ -23,9 +23,6 @@
     white-space: nowrap;
 }
 
-.live_tree_item_indent {
-    margin-left: 1em;
-}
 
 .live_tree_item_heading {
 }
@@ -87,7 +84,8 @@ a.live_tree_item_link {
 }
 
 .live_tree_item_indent {
-    margin-left: 1.3em;
+    margin-left: 1em;
+    padding-left: 18px  !important;
 }
 
 

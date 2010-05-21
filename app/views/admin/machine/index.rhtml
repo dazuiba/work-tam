@@ -1,0 +1,10 @@
+<% tabs = [{:auto => "TAM"},
+					 {:perf => "性能专用"},
+					 {:other => "其他"}] %>
+<%= tabs_header(tabs) %>
+
+<% @result.each do|type, machines| %>
+	<% tab_content(type, tabs) do %>
+		<%= render :partial => "machine_list", :locals => {:type=>type, :machine_list=>machines}%>
+	<% end %>
+<% end %>

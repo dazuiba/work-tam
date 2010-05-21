@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title id="POPTITLE" >淘宝测试平台 -- tWork</title>
+  </head>
+  <frameset cols="175,12,*" id="indexFrame" framespacing="0" frameborder="no" border="0">
+    <% menu = Menu.find_root_menu(params[:m]) %>
+    <frame src="/home/frame_left?m=<%= menu.id %>" name="leftFrame"  scrolling="no" noresize id="leftFrame" title="leftFrame" style="" />
+    <frame src="/home/frame_mid" name="midFrame" id="midFrame" scrolling="no" noresize title="midFrame" />
+    <frame src="<%= menu.inner_url %>" name="mainFrame" scrolling="yes" id="mainFrame" noresize title="mainFrame" />
+  </frameset>
+  <noframes>
+    <body>
+    </body>
+  </noframes>
+</html>

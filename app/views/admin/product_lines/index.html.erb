@@ -1,0 +1,26 @@
+<h1>产品线列表</h1>
+
+<table>
+  <tr>
+    <th>Id</th>
+    <th>名称</th>
+    <th>描述</th>
+    <th>Id_string</th>
+  </tr>
+
+<% @product_lines.each do |product_line| %>
+  <tr>
+    <td><%=h product_line.id %></td>
+    <td><%=h product_line.name %></td>
+    <td><%=h product_line.desc %></td>
+    <td><%=h product_line.id_string %></td>
+    <td><%= link_to '详情', product_line %></td>
+    <td><%= link_to '编辑', edit_admin_product_line_path(product_line) %></td>
+    <td><%= link_to '删除', product_line, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to '新建产品线', new_admin_product_line_path %>

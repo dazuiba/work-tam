@@ -38,10 +38,20 @@ module RedmineHelper
 		else
 			'null'
 		end
-		links =	tabs.map do|tab|
-			"<li>" + link_to(l(tab[:label]), "#" ,:id => "tab-#{tab[:name]}",
-			                                    :class => (tab[:name].to_s != selected_tab(tabs) ? nil : 'selected'),
-			                                    :onclick => "showTab('#{tab[:name]}',#{container} ); this.blur(); return false;" ) + "</li>"
+		links =	tabs.map do|tab|                
+		  link_options  =  { :id      => "tab-#{tab[:name]}",   
+		                     :class   => (tab[:name].to_s != selected_tab(tabs) ? nil : 'selected') }  
+		                     
+		  tab_option = options[tab[:name]]         
+		  onclick_tab_option  = tab_option&&tab_option[:onclick]       
+		  default_onclick = "showTab('#{tab[:name]}',#{container} ); this.blur(); return false;"
+		  link_options[:onclick] = if onclick_tab_option.nil?         
+                      		        default_onclick
+                        	    elsif onclick_tab_option.is_a? Hash
+                        	        remote_function onclick_tab_option.merge(:after=>"showTab('#{tab[:name]}',#{container} );")      
+                        	    else
+                        	    end      
+	    "<li>" + link_to(l(tab[:label]), "#", link_options) + "</li>"
 		end
 		
 		%[<div class="tabs">
@@ -293,17 +303,15 @@ module RedmineHelper
     elements.any? ? content_tag('p', args.join(' &#187; ') + ' &#187; ', :class => 'breadcrumb') : nil
   end
 
-  def html_title(*args)
-    if args.empty?
-      title = []
-      title << @project.name if @project
-      title += @html_title if @html_title
+  def html_title(*args)     
+    if args.empty? && @html_title.nil?
+      title = []                          
       title << Setting.app_title
       title.compact.join(' - ')
     else
       @html_title ||= []
       @html_title += args
-    end
+    end                                            
   end
 
   def accesskey(s)
@@ -318,7 +326,7 @@ module RedmineHelper
       gsub(/([^\n]\n)(?=[^\n])/, '\1<br />')  # 1 newline   -> br
   end
 
-  def error_messages_for(object_name, options = {})
+  def error_messages_for_bak(object_name, options = {})
     options = options.symbolize_keys
     object = instance_variable_get("@#{object_name}")
     if object && !object.errors.empty?

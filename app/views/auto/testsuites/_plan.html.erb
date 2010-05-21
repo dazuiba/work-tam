@@ -1,0 +1,78 @@
+   
+<script type="text/javascript">
+  <!--
+  function toggle_visibility() {
+    if ($("plann_day").checked){
+      Element.hide("week");
+    }      
+    else{
+      
+      Element.show("week");
+    }      
+  }
+
+  function Checked(values){
+    Element.show("week");
+    var value = values
+    var checkboxes = [];
+    var boxes = $$('input[type="checkbox"]')
+    boxes.each(function(box){
+      if (box.name == 'exec_plan[wday][]'){checkboxes.push(box)}
+    });
+    value.each(function(i){checkboxes[i].checked = true;})
+ 
+  }
+
+  function unChecked(){
+    Element.hide("week");
+    var checkboxes = [];
+    var boxes = $$('input[type="checkbox"]')
+    boxes.each(function(box){
+      if (box.name == 'exec_plan[wday][]'){checkboxes.push(box)}
+    });
+  
+    checkboxes.each(function(e){e.checked = false;});
+      
+  }
+
+  function isPlan(){
+    var is_plan
+    for (i = 0; i <= 6; i++){ 
+      if ($("exec_plan_wday_"+i).checked == true){       
+        var is_plan = true
+      }else
+      {is_plan = is_plan || false}
+    }
+    if (is_plan && $("exec_plan_start_time").options[0].selected == true){
+      alert("请选择计划时间！")
+      return false;
+    }
+    else{
+      return true;
+    }
+  }
+
+  window.onload=function()
+  {
+   
+    toggle_visibility()
+  }
+    
+  //-->
+</script>
+<% fields_for :plan, @testsuite.exec_plan do  %>
+  <%=label(:post, :title, "按周")%>
+  <%= radio_button_tag("plann", "week",wday_exsist,:onclick => "Checked(#{default_wday})")  %>
+  <%=label(:post, :title, "按天")%>
+  <%= radio_button_tag("plann", "day", !wday_exsist,:onclick => "unChecked()") %>
+  <%= select "exec_plan","start_time",(0..23).to_a ,{:selected => select_int_options ,:include_blank => true} %>点
+  <%=label(:post, :title, "计划执行IP")%>
+  <%= select_machine_tag "plan_ip", @testsuite.plan_ip,{:required => true,:local => true ,:include_blank => true} %>
+  <div id="week">
+    <% ['日','一', '二','三', '四', '五', '六'].each_with_index do|e, i|  %>
+      周<%= e %>
+      <%= check_box_tag('exec_plan[wday][]',i.to_s, check_box_options(i),:id => "exec_plan_wday_"+"#{i}")%>
+    <% end %>
+  </div>
+
+<% end %>

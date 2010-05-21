@@ -1,0 +1,217 @@
+
+<script type="text/javascript" charset="utf-8">
+
+  function cancel(){
+    var url= "/auto/testsuites?type=<%= @testsuite.project.line_home? ? 'line' : '' %>&system=<%= @testsuite.range_type=='system' ? true : '' %>" ;
+    window.location=url
+  }
+	
+  function destroy(){
+    if (confirm("将会删除所有相关资料")){
+      var url= "/auto/testsuites/destroy/<%= @testsuite.id %>";
+      window.location=url
+    }
+  }
+</script>
+<p><%= testsuite_info(@testsuite) %></p>  
+
+
+
+<fieldset id="filters" style="background-color:#F6F6F6;">
+  <legend>用例选择</legend>
+  <%= render :partial=>"category_select"%>
+  <p></p>
+  <%= render :partial => 'filters', :locals => local_assigns %>
+  <p class="buttons">
+    <%= link_to_remote "确认",
+      { :url => { :action => :set_filter,
+        :project_id => @query.project_id},
+      :update => "result",
+      :with => "Form.serialize('testsuite-form')"
+    }, :class => 'icon icon-checked' %>
+    <span style="color: red;">用例重新选择时，请先确认！</span>
+  </p>
+</fieldset>
+
+<div id="result">
+  <%= render(:partial=> "testcases", :object => @testcases) if @testcases%>
+</div>
+
+<div class="box">
+  <p><%= f.text_field :title, :required => true, :size => 26 %></p>
+  <p><%= f.select :category_id, Auto::TestsuiteCategory.all.collect{|e|[e.title,e.id]},:include_blank => true %></p> 
+</div>
+
+<div style="clear:both;"> 
+  <p><%= f.text_area :description, :cols => 3, :rows => 1, :class => 'wiki-edit'%></p>
+  <fieldset id="plan">
+    <legend><%= l(:label_test_plan) %></legend>
+    <%= render :partial => 'plan', :locals=>local_assigns %>
+  </fieldset>
+</div>
+
+<table>
+  <tr>
+    <td>                                   
+      <%= submit_tag l(:button_save), :title=>'save'%>
+      <input type="button" value="返回" onclick="cancel()"/>
+    </td>
+    <td>
+      <% if !@testsuite.new_record? %>
+        <input type="button" value="删除" onclick="destroy()"/>
+      <% end %>
+    </td>
+  </tr>
+</table>     
+
+<script sprachen="javascript" src="/automan/baidu_select.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+  var class_level_1 = <%= @category_json[:level_1] %>
+                                                   
+  var class_level_2 = <%= @category_json[:level_2] %>
+  var class_level_3 = <%= @category_json[:level_3] %>
+</script>        
+
+
+<script type="text/javascript" charset="utf-8">       
+
+  var g_ClassLevel1=null
+  var g_ClassLevel2=null
+  var g_ClassLevel3=null
+  function putCid(){
+    // var B=document.changeClassForm;
+    // 	    var C=B.cid.value;
+    // 	    var A=B.cname.value;
+    //
+    // 	   if(C==0){
+    //  	        ShowError("ca","no_cata");
+    //  	        return false
+    //  	    }
+    //
+    //  	    G("ca_error").style.color="";
+    //  	    //G("ca_error").innerHTML=ikaskDefault.cate;
+    //  	    Fe.show("classidDiv");
+    //  	    G("classid").innerHTML="<label><input type='radio' checked name='ra' value='"+C+"' />&nbsp;&nbsp;"+A+"<br></label>";
+    //  	    //ikaskAC.userSelected=1;
+    //  	    document.ftiwen.cid.value=C;
+    //  	    Fe.hide("changeClassDiv");
+    //  	    Fe.show("changecate");
+    //  	    Fe.hide("classidInfo");
+    //  	    Fe.hide("changeclassInfo")
+  }
+
+  function getCidValue(){
+    var D=G("ClassLevel1");
+    var C=G("ClassLevel2");
+    var B=G("ClassLevel3");
+    var A=$('category_id')
+    if(D.value!=0){
+      A.value=D.value;
+      $('cateViewer').innerText = D.options[D.selectedIndex].text
+    }
+
+    if(C.value!=0){
+      A.value=C.value;
+      $('cateViewer').innerText +="->"+C.options[C.selectedIndex].text
+    }
+
+    if(B.value!=0){
+      A.value=B.value;
+      $('cateViewer').innerText +="->"+B.options[B.selectedIndex].text
+    }
+
+
+  }
+
+  function FillClassLevel1(A){
+    A.options[0]=new Option("所有","");
+    for(i=0;i<class_level_1.length;i++){
+      A.options[i+1]=new Option(class_level_1[i][1],class_level_1[i][0])
+    }
+
+    A.options[0].selected=true;
+    A.length=i+1
+  }
+
+  function FillClassLevel2(B,A){
+    B.options[0]=new Option("所有","");
+    count=1;
+    for(i=0;i<class_level_2.length;i++){
+      if(class_level_2[i][0].toString()==A){
+        B.options[count]=new Option(class_level_2[i][2],class_level_2[i][1]);
+        count=count+1
+      }
+
+
+    }
+
+    B.options[0].selected=true;
+    B.length=count
+  }
+
+  function FillClassLevel3(B,A){
+    B.options[0]=new Option("所有","");
+    count=1;
+    for(i=0;i<class_level_3.length; i++){
+      if(class_level_3[i][0].toString()==A){
+        B.options[count]=new Option(class_level_3[i][2],class_level_3[i][1]);
+        count=count+1
+      }
+    }
+
+    B.options[0].selected=true;
+    B.length=count
+  }
+
+  function ClassLevel3_onchange(){
+    getCidValue()
+  }
+  
+  function ClassLevel2_onchange(){
+    FillClassLevel3(g_ClassLevel3,g_ClassLevel2.value);
+    if(g_ClassLevel3.length<=1){
+      g_ClassLevel3.style.display="none";
+      document.getElementById("jiantou").style.display="none"
+    }
+
+    else{
+      g_ClassLevel3.style.display="";
+      document.getElementById("jiantou").style.display=""
+    }
+
+    getCidValue()
+  }
+
+  function ClassLevel1_onchange(){
+    FillClassLevel2(g_ClassLevel2,g_ClassLevel1.value);
+    ClassLevel2_onchange();
+    getCidValue()
+  }
+
+  function InitClassLevelList(C,B,A){
+    g_ClassLevel1=C;
+    g_ClassLevel2=B;
+    g_ClassLevel3=A;
+    g_ClassLevel1.onchange=ClassLevel1_onchange
+    g_ClassLevel2.onchange=ClassLevel2_onchange
+    FillClassLevel1(g_ClassLevel1);
+    g_ClassLevel1.ondblclick=g_ClassLevel2.ondblclick=g_ClassLevel3.ondblclick=putCid;
+<% if @category_trace.blank? %>
+      ClassLevel1_onchange()
+<% else %>
+  <% @category_trace.each_with_index do|e, i| %>
+        g_ClassLevel<%= i+1%>.value = <%= e.id %>
+        ClassLevel<%= i+1%>_onchange()
+  <% end %>
+
+<% end %>
+  }
+	
+  document.observe('dom:loaded', function(){
+    InitClassLevelList(G("ClassLevel1"),G("ClassLevel2"),G("ClassLevel3"));
+    getCidValue();
+  });
+                               
+</script>
+
+

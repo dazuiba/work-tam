@@ -1,0 +1,36 @@
+<%  html_title "【#{@product_line.name}线】的测试集" %>
+<%= render :partial => "auto/sidebar" %>
+
+<%= render(:partial => "shared/project_line_selector", :locals=>{:line_id=>@product_line.id})%>
+
+
+<% tabs = [{:master => "基线库"}, {:slaves => "项目"}]%> 
+
+<%= tabs_header(tabs) %>
+
+<div id='activity'>
+
+  <% tab_content(:master, tabs) do%>
+    <% if @base_project && @base_project.auto? %>
+      <%= render :partial => "project", :object => @base_project %>
+    <% else %>
+      该产品线还未纳入twork管理
+    <% end %>
+  <% end %>
+
+  <% tab_content(:slaves, tabs) do%>
+    <% @projects.each do|project| %>
+      <%= render :partial => "project", :object => project %>
+    <% end %>
+  <% end %>
+
+</div>
+<p>如需将项目自动化， 请联系<%= link_to("值班小二", "#questions") %>！</p>
+<SCRIPT LANGUAGE='JavaScript'>
+  <!--
+  function ResumeError() {
+    return true;
+  }
+  window.onerror = ResumeError;
+  // -->
+</SCRIPT> 

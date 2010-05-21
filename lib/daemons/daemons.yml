@@ -1,0 +1,6 @@
+dir: ../../tmp/pids
+log_output: true
+multiple: false
+backtrace: true
+monitor: false
+force_kill_wait: 1

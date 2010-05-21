@@ -1,0 +1,14 @@
+<%@title="查看 #{username @user}  的信息"%>
+<% round_corner_action_bar do %>
+   <%= link_to '修改密码', {:action => 'change_self_password'}, :class => 'edit-password' %>
+   <%= spinner %>
+<% end %>
+<p>
+  <b>用户名:</b>
+  <%=h @user.login %>
+</p>
+
+<p>
+  <b>姓名:</b>
+  <%=h @user.name %>
+</p>

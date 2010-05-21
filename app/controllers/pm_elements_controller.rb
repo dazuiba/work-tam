@@ -44,12 +44,18 @@ class PmElementsController < ApplicationController
   # POST /pm_elements
   # POST /pm_elements.xml
   def create
-    @pm_element = PmElement.new(params[:pm_element]) 
+    @pm_element = PmElement.new(params[:pm_element])             
     @pm_element.properties = OpenStruct.new params[:properties]
     respond_to do |format|
       if @pm_element.save
         flash[:notice] = 'PmElement was successfully created.'
-        format.html { redirect_to(@pm_element) }
+        format.html { 
+          if params[:commit]=~/父级/
+            redirect_to(@pm_element.parent) 
+          else
+            redirect_to(@pm_element) 
+          end
+        }
         format.xml  { render :xml => @pm_element, :status => :created, :location => @pm_element }
       else
         format.html { render :action => "new" }
@@ -63,7 +69,13 @@ class PmElementsController < ApplicationController
   def update
     @pm_element = PmElement.find(params[:id])   
     @pm_element.properties = OpenStruct.new params[:properties]
-
+    if params[:name]
+      #update root element
+      pm_model = @pm_element.pm_model
+      pm_model.name = params[:name]
+      pm_model.title = params[:title]
+      pm_model.save!
+    end
     respond_to do |format|
       if @pm_element.update_attributes(params[:pm_element])
         flash[:notice] = 'PmElement was successfully updated.'

@@ -1,0 +1,40 @@
+<%= render :partial => 'sidebar', :locals=>local_assigns %>
+<% tabs = [{:logs => "#{@reason_info}出错记录"}] %>
+<%= tabs_header(tabs) %>
+<% tab_content(0, tabs) do %>
+<div id="job-list">
+	 <% if @auto_bgjobs.size == 0 %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+    <% else %>
+    <% table(@auto_bgjobs, %w{用例名称 维护者  执行结果  出错原因 备注  验证结果  开始时间 完成时间}) do |bgjob, klass| -%>
+    <tr class="<%= klass %>">
+        <td>
+            <%= link_to "#{bgjob.testcase.title if bgjob.testcase }",  "##{bgjob.id}" %>
+        </td>
+        <td>
+            <%= link_to_user bgjob.testcase.auto_designer if bgjob.testcase %>
+        </td>
+        <td>
+            <%= bgjob_result bgjob %>
+        </td>
+        <td>
+            <%= bgjob.reason_info %>
+        </td>
+        <td>
+            <%= bgjob.remark %>
+        </td>
+        <td>
+            <%= bgjob.confirm_result %>
+        </td>
+        <td>
+            <%= format_time bgjob.started_at %>
+        </td>
+        <td>
+            <%= format_time bgjob.done_at %>
+        </td>
+    </tr>
+    <% end %>
+    <%= will_paginate @auto_bgjobs,:params => {:year=>@year,:month =>@month,:reason_info=>@reason_info} %>
+	 <% end %>
+</div>
+<% end %>

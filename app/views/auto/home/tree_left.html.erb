@@ -1,0 +1,156 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>jsTree &raquo; Demos</title>
+    <style>
+      html {
+        background:#F7FBFE;
+        scrollbar-3dlight-color:#cccccc;
+        scrollbar-arrow-color:#999999;
+        scrollbar-track-color:#ffffff;
+        scrollbar-darkshadow-color:#ffffff;
+        scrollbar-face-color:#ffffff;
+        scrollbar-highlight-color:#ffffff;
+        scrollbar-shadow-color:#cccccc;
+      }
+    </style>
+    <script type="text/javascript" src="/automan/jstree/lib/jquery.js"></script>
+    <script type="text/javascript" src="/automan/jstree/lib/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/automan/jstree/lib/jquery.hotkeys.js"></script>
+    <script type="text/javascript" src="/automan/jstree/lib/jquery.metadata.js"></script>
+    <script type="text/javascript" src="/automan/jstree/lib/sarissa.js"></script>
+    <script type="text/javascript" src="/automan/jstree/jquery.tree.js"></script>
+    <script type="text/javascript" src="/automan/jstree/plugins/jquery.tree.checkbox.js"></script>
+    <script type="text/javascript" src="/automan/jstree/plugins/jquery.tree.contextmenu.js"></script>
+    <script type="text/javascript" src="/automan/jstree/plugins/jquery.tree.cookie.js"></script>
+    <script type="text/javascript" src="/automan/jstree/plugins/jquery.tree.hotkeys.js"></script>
+    <script type="text/javascript" src="/automan/jstree/plugins/jquery.tree.metadata.js"></script>
+    <script type="text/javascript" src="/automan/jstree/plugins/jquery.tree.themeroller.js"></script>
+    <script type="text/javascript" src="/automan/jstree/plugins/jquery.tree.xml_flat.js"></script>
+    <script type="text/javascript" src="/automan/jstree/plugins/jquery.tree.xml_nested.js"></script>
+    <link type="text/css" rel="stylesheet" href="/automan/jstree/syntax/shCore.css"/>
+    <link type="text/css" rel="stylesheet" href="/automan/jstree/syntax/shThemeDefault.css"/>
+    <link type="text/css" rel="stylesheet" href="/automan/jstree/tree.css"/>
+    <script type="text/javascript" src="/automan/jstree/syntax/shCore.js"></script>
+    <script type="text/javascript" src="/automan/jstree/syntax/shBrushJScript.js"></script>
+    <script type="text/javascript" src="/automan/jstree/syntax/shBrushXml.js"></script>
+    <script type="text/javascript" class="source" src="/automan/jstree/source.tree.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      function expand_all(){
+        if ($.tree.focused().selected==undefined) {
+          alert("请先选择节点！");}
+        else {
+          $.tree.focused().open_all("#"+$.tree.focused().selected.attr("id"));}
+      }
+      function collapse_all(){
+        if ($.tree.focused().selected==undefined) {
+          $.tree.focused().close_all();}
+        else {
+          $.tree.focused().close_branch("#"+$.tree.focused().selected.attr("id"));}
+      }
+    </script>
+    <a href="javascript:expand_all()"><img alt="全部展开" title="全部展开" src="/automan/jstree/themes/default/expand-all.gif" border="0" ></a>
+    <a href="javascript:collapse_all()"><img alt="全部收缩" title="全部收缩" src="/automan/jstree/themes/default/collapse-all.gif" border="0" ></a>
+    <a href="javascript:location.reload()"><img alt="刷新" title="刷新" src="/automan/jstree/themes/default/refresh.png" border="0" ></a>
+
+    <div id="container">
+      <script type="text/javascript" class="source">
+        var stat = <%= init_tree(nil) %>;
+        $(function () {
+          $.ajaxSetup({cache:false});//ajax调用不使用缓存
+          $("#async_json_1").tree({
+            data : {
+              type : "json",
+              async : true,
+              opts : {
+                async : true,
+                method : "GET",
+                url : "/auto/home/gen_tree"
+              }
+            },
+            lang:{
+              loading:"加载中"  //在用户等待数据渲染的时候给出的提示内容，默认为loading
+            },
+            ui:{
+              theme_name:'apple'  //设置样式
+            },
+            callback : {
+              // Make sure static is not used once the tree has loaded for the first time
+              onload : function (t) {
+                t.settings.data.opts.static = false;
+              },
+              //n--节点，t是tree
+              beforedata : function (n, t) {
+                if(n == false){
+                  t.settings.data.opts.static = stat;
+                }
+                else{
+                  $.tree.focused().select_branch("#"+$(n).attr("id"));
+                  return {parent_id : $(n).attr("id") || 0}  // AJAX调用参数传递
+                }
+              },
+              onselect: function (n, t) {
+                link = $(n).attr("href");
+                if (link == undefined) {
+                  // alert("undefined");
+                }
+                else {
+                  parent.document.getElementById('content').src = link;
+                }
+              }
+            }
+            ,
+            plugins:{
+              contextmenu : {
+                items : {
+                  // get rid of the remove item
+                  create : false,
+                  rename : false,
+                  remove : false,
+                  my_act : {
+                    label	: "gen_dir",
+                    icon	: "", // you can set this to a classname or a path to an icon like ./myimage.gif
+                    visible     : function (NODE, TREE_OBJ) {
+                      if($(NODE).attr("flag") == "true") return 1;
+                      return -1;
+                    },
+                    action	: function (NODE, TREE_OBJ) {
+                      id = $(NODE).attr("id");
+                      prefix = TREE_OBJ.get_text(NODE).split("_")[0]
+                      $.ajax({
+                        type: "POST",
+                        url: "/auto/home/console",
+                        data: "name=gen_dir&id="+id+"&prefix="+prefix,
+                        success: function(msg){
+                          if (msg==""){
+                            alert("生成失败！");
+                          }
+                          else{
+                            root_dir = msg.split("\n")[0].split(":")[1];
+                            dir = msg.split("\n")[1].split(":")[1];
+                            file_name = msg.split("\n")[2].split(":")[1];
+                            file_dir = "/automan/autotest/"+root_dir+"/"+dir+"/";
+                            rb_file = file_dir+file_name+".rb"
+                            xls_file = file_dir+file_name+".xls"
+                            window.open(rb_file);
+                            window.open(xls_file);
+                          }
+                        }
+                      });
+                    },
+                    separator_before : true
+                  }
+                }
+              }
+            }
+          });
+        });
+      </script>
+      <div class="tree" id="async_json_1">
+      </div>
+    </div></body></html>

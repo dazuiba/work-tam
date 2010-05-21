@@ -1,0 +1,8 @@
+html, body { margin:0; padding:0; }
+body, td, th, pre, code, select, option, input, textarea { font-family:"Trebuchet MS", Sans-serif; font-size:10pt; }
+#container { width:800px; margin:10px auto; overflow:hidden; }
+.tree { height:100%; width:300px; float:left; margin:0;  font-family:Verdana; font-size:10px; background:white; }
+.code { width:490px; float:right; margin:0 0 10px 0; border:1px solid gray; }
+pre { display:block; }
+.syntaxhighlighter { margin:0 0 0 0 !important; padding:0 !important; }
+a.search { color:green !important; }

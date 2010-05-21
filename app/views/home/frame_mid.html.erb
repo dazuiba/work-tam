@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD><TITLE>中间页</TITLE>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<style type="text/css">
+body {
+	margin:0;
+	padding:0;
+}
+td { border-left:1px #8EC2DF solid}
+-->
+</style></head>
+<SCRIPT>
+function Submit_onclick(){
+   if(window.parent.document.getElementById("indexFrame").cols=="175,12,*"){
+		window.parent.document.getElementById("indexFrame").cols="0,12,*";
+		document.getElementById("switchbar").src="/menu/images/none2.gif"
+	}else{
+		window.parent.document.getElementById("indexFrame").cols="175,12,*";
+		document.getElementById("switchbar").src="/menu/images/none.gif";
+	}
+}
+</SCRIPT>
+<BODY bgColor=#ffffff leftMargin=0 topMargin=0>
+<TABLE height="100%" cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  
+  <TR>
+    <TD width=12 height="50%">&nbsp;</TD>
+
+   </TR>
+  <TR>
+    <TD width=12 style="border:0"><A title=点击缩放窗口 
+      style="CURSOR: hand" href="javascript:Submit_onclick()"><img id="switchbar" src="/menu/images/none.gif" border="0" /></A></TD>
+   </TR>
+  <TR>
+    <TD width=12 height="50%" >&nbsp;</TD>
+   </TR>
+  
+</TBODY>
+
+		<script language="javascript">
+			setTimeout( "location.reload()","300000");
+		</script>
+
+</TABLE>
+</BODY>
+
+</html>
+

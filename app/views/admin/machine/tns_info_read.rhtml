@@ -1,0 +1,31 @@
+<% form_tag({:action=>"tns_info_read"}) do %>
+<table>
+     <tr>
+        <td>查询tns的ip:</td>
+        <td>
+            <%=text_field_tag "tns_ip" %>
+        </td>
+     </tr>
+     <tr>
+        <td>tns的路径:</td>
+        <td>
+            <%=text_field_tag "tns_add" %><%= submit_tag "查询",:disable_with => '正在处理...' %>
+        </td>
+    </tr>
+</table>
+<% end %>
+<% form_tag({:action=>"tns_info_update"}) do %>
+<table>
+	<tr>
+        <td>当前host绑定:</td>
+        <td>
+           <%=text_area_tag "tns_info" , @exec_tns_info, :size => "45x50"%>
+            <%=hidden_field_tag "tns_ip",@ip %>
+            <%=hidden_field_tag "tns_add",@tns_add %>
+           <br/>
+           <%= submit_tag "修改",:disable_with => '正在处理...' %>
+        </td>
+    </tr>
+</table>
+
+<% end %>

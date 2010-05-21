@@ -94,11 +94,19 @@ module Acts #:nodoc:
         #   subchild1.self_and_siblings # => [subchild1, subchild2]
         def self_and_siblings
           parent ? parent.children : self.class.roots
-        end
+        end     
+        
+        
         def all_children
-			    return [] if leaf?
-			    self.children.inject{|result,child| result<<child.all_children}
-			  end
+			    return [] if self.children.empty?
+			    result = []
+			    self.children.each do |child|
+			      result<<child
+			      result+=child.all_children
+			    end         
+			    result
+			  end        
+			  
 			  def leaf?
 			  	self.children.count==0
 			  end

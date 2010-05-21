@@ -1,0 +1,23 @@
+<h1>新建产品</h1>
+
+<% form_for :product, @product, :url => { :action => "create" } do |f| %>
+	
+  <%= f.hidden_field :product_line_id%>  
+   <%= hidden_params_field_tag(:back)%>  
+  <p>
+    名称<br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    描述<br />
+    <%= f.text_field :desc %>
+  </p>
+   
+  <p>
+    序号（默认值为最后）<br />
+    <%= f.text_field :position, :value => @product.next_position %>
+  </p>
+  <p>
+    <%= submit_tag '创建' %>
+  </p>
+<% end %>

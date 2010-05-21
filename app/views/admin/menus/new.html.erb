@@ -1,0 +1,6 @@
+<h1>新建菜单</h1>
+
+<% labelled_tabular_form_for :menu, @menu, :url => { :action => "new", :id => @menu }, :method=>'post' do |f| %>
+  <%= render :partial => 'form', :locals => {:f => f}  %>
+  <%= submit_tag "保存", :class => 'default' %>
+<% end -%>

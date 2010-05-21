@@ -1,0 +1,70 @@
+<div class="tabs">
+  <ul>
+    <li><a href="/auto/auto_test_reports/bug_report?tab=bug" class="<%= 'selected' if @tab=='bug' %>" id="tab-bug">回归bug报表</a></li>
+    <li><a href="/auto/auto_test_reports/failed_reason_report?tab=failed_reason" class="<%= 'selected' if @tab=='failed_reason' %>" id="tab-failed_reason">回归出错原因报表</a></li>
+    <li><a href="/auto/auto_test_reports/regress_exec_result_report?tab=regress_exec_result" class="<%= 'selected' if @tab=='regress_exec_result' %>" id="tab-regress_exec_result">回归用例执行结果报表</a></li>
+  </ul>
+</div>
+<div class="tab-content" id="tab-content-bug">
+  <%= render :partial => 'sidebar', :locals=>local_assigns %>
+  <% form_tag({:action=>"bug_report"}) do %>
+    <table align="center">
+      <tr>
+        <td>
+          <% if @product_line%>
+            产品线: <%= select_product_tag "product_line",@product_line.to_i %>
+          <% else %>
+            产品线: <%= select_product_tag "product_line" %>
+          <% end %>
+        </td>
+        <td>
+          用例负责人: <%= select_designer_tag "designer",@designer %>
+        </td>
+        <td>
+          年份: <%= select_tag "year", options_for_select(Auto::AutoTestReport::START_YEAR..DateTime.now.year,@year.to_i) %>
+        </td>
+        <td>
+          <%= select_tag "month", options_for_select(1..12,@month.to_i) %>月份
+        </td>
+        <td><%= submit_tag "查询" %></td>
+      </tr>
+    </table>
+  <% end %>
+  <% tabs = [{:logs => "bug统计"}] %>
+  <%= tabs_header(tabs) %>
+  <% tab_content(0, tabs) do %>
+    <div id="job-list">
+      <% if @auto_bgjobs.size == 0 %>
+        <p class="nodata"><%= l(:label_no_data) %></p>
+      <% else %>
+        <% table(@auto_bgjobs, %w{用例名称 用例负责人  产品线 错误原因 备注  开始时间 完成时间}) do |bgjob, klass| -%>
+          <tr class="<%= klass %>">
+            <td>
+              <%= bgjob.attributes["title"] %>
+            </td>
+            <td>
+              <%= bgjob.attributes["nickname"] %>
+            </td>
+            <td>
+              <%= bgjob.attributes["name"] %>
+            </td>
+            <td>
+              <%= bgjob.attributes["reason_info"] %>
+            </td>
+            <td>
+              <%= bgjob.attributes["remark"] %>
+            </td>
+            <td>
+              <%= format_time bgjob.attributes["started_at"] %>
+            </td>
+            <td>
+              <%= format_time bgjob.attributes["done_at"] %>
+            </td>
+          </tr>
+        <% end %>
+        <%= will_paginate @auto_bgjobs,:params => {:year=>@year,:month =>@month,:designer=>@designer,:product_line=>@product_line} %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+

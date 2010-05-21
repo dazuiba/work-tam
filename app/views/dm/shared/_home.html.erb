@@ -1,0 +1,148 @@
+<table class="hometable">
+<tr>
+	<td>
+	<h4>Welcome to SQL Buddy!</h4>
+	</td>
+</tr>
+<tr>
+	<td style="padding: 0 0 13px 10px">
+	
+	<p>You are connected to MySQL 5.1.36 with the user root@localhost.</p>	
+	<table cellspacing="0" cellpadding="0">
+		<tr>
+		<td class="inputfield">
+		Language:
+		</td>
+		<td>
+		<select id="langSwitcher" onchange="switchLanguage()"><option value="ms_ID">Bahasa Melayu</option><option value="ca_AD">Català</option><option value="cs_CZ">Čeština</option><option value="sr_RS">Српски ћирилица</option><option value="da_DK">Danish</option><option value="de_DE">Deutsch</option><option value="en_US" selected>English</option><option value="es_ES">Español</option><option value="es_AR">Español (Argentina)</option><option value="eo_EO">Esperanto</option><option value="fr_FR">Français</option><option value="gl_ES">Galego</option><option value="id_ID">Indonesian</option><option value="it_IT">Italiano</option><option value="he_IL">Ivrit</option><option value="lo_LA">Lao</option><option value="lv_LV">Latviešu</option><option value="hu_HU">Magyar</option><option value="nl_NL">Nederlands</option><option value="pl_PL">Polski</option><option value="pt_BR">Português (Brasil)</option><option value="pt_PT">Português (Portugal)</option><option value="ru_RU">Русский</option><option value="ro_RO">Română</option><option value="sk_SK">Slovenčina</option><option value="sl_SL">Slovenščina</option><option value="sp_RS">Srpski</option><option value="fi_FI">Suomi</option><option value="sv_SE">Svenska</option><option value="tl_PH">Tagalog</option><option value="vi_VN">Tiếng Việt</option><option value="tr_TR">Türkçe</option><option value="uk_UA">Українська</option><option value="ar_DZ">العربية</option><option value="fa_IR">فارسی</option><option value="zh_CN">中文 (简体)</option><option value="zh_TW">中文 (繁體)</option><option value="ja_JP">日本語</option></select>		</td>
+	</tr>
+	<tr>
+		<td class="inputfield">
+		Theme:
+		</td>
+		<td>
+		<select id="themeSwitcher" onchange="switchTheme()">
+		<option value="classic">Classic</option><option value="bittersweet" selected>Bittersweet</option>		</select>
+		</td>
+	</tr>
+	</table>
+	
+	</td>
+</tr>
+<tr>
+	<td>
+	<h4>Getting started</h4>
+	</td>
+</tr>
+<tr>
+	<td style="padding: 1px 0 15px 10px">
+	
+	<ul>
+	<li><a href="http://www.sqlbuddy.com/help/">Help</a></li>
+	<li><a href="http://www.sqlbuddy.com/translations/">Translations</a></li>
+	<li><a href="http://www.sqlbuddy.com/contact/">Contact</a></li>
+	</ul>
+	
+	</td>
+</tr>
+<tr>
+	<td>
+	<h4>Create a new database</h4>
+	</td>
+</tr>
+<tr>
+	<td style="padding: 0px 0 20px 10px">
+	
+	<form onsubmit="createDatabase(); return false;">
+	<table cellspacing="0" cellpadding="0">
+	<tr>
+	<td class="inputfield">
+		Name:
+	</td>
+	<td>
+		<input type="text" class="text" id="DBNAME">
+	</td>
+	</tr>
+	<tr><td class="inputfield">Charset:</td><td><select id="DBCHARSET"><option></option><option value="big5">big5</option><option value="dec8">dec8</option><option value="cp850">cp850</option><option value="hp8">hp8</option><option value="koi8r">koi8r</option><option value="latin1">latin1</option><option value="latin2">latin2</option><option value="swe7">swe7</option><option value="ascii">ascii</option><option value="ujis">ujis</option><option value="sjis">sjis</option><option value="hebrew">hebrew</option><option value="tis620">tis620</option><option value="euckr">euckr</option><option value="koi8u">koi8u</option><option value="gb2312">gb2312</option><option value="greek">greek</option><option value="cp1250">cp1250</option><option value="gbk">gbk</option><option value="latin5">latin5</option><option value="armscii8">armscii8</option><option value="utf8" selected="selected">utf8</option><option value="ucs2">ucs2</option><option value="cp866">cp866</option><option value="keybcs2">keybcs2</option><option value="macce">macce</option><option value="macroman">macroman</option><option value="cp852">cp852</option><option value="latin7">latin7</option><option value="cp1251">cp1251</option><option value="cp1256">cp1256</option><option value="cp1257">cp1257</option><option value="binary">binary</option><option value="geostd8">geostd8</option><option value="cp932">cp932</option><option value="eucjpms">eucjpms</option></select></td></tr>	<tr>
+		<td></td>
+		<td>
+		<input type="submit" class="inputbutton" value="Submit" />
+		</td>
+	</tr>
+	</table>
+	</form>
+	
+	</td>
+</tr>
+<tr>
+	<td>
+	<h4>Did you know...</h4>
+	</td>
+</tr>
+<tr>
+	<td style="padding: 0 0 10px 10px;">
+	
+	<p>The login page is based on a default user of root@localhost. By editing config.php, you can change the default user and host to whatever you want.</p>
+			
+	</td>
+</tr>
+<tr>
+	<td>
+	<h4>Keyboard shortcuts</h4>
+	</td>
+</tr>
+<tr>
+	<td style="padding: 4px 0 5px 10px">
+	
+	<table class="keyboardtable">
+	<tr>
+		<th>Press this key...</th>
+		<th>...and this will happen</th>
+	</tr>
+	<tr>
+		<td>a</td>
+		<td>select all</td>
+	</tr>
+	<tr>
+		<td>n</td>
+		<td>select none</td>
+	</tr>
+	<tr>
+		<td>e</td>
+		<td>edit selected items</td>
+	</tr>
+	<tr>
+		<td>d</td>
+		<td>delete selected items</td>
+	</tr>
+	<tr>
+		<td>r</td>
+		<td>refresh page</td>
+	</tr>
+	<tr>
+		<td>q</td>
+		<td>load the query tab</td>
+	</tr>
+	<tr>
+		<td>f</td>
+		<td>browse tab - go to first page of results</td>
+	</tr>
+	<tr>
+		<td>l</td>
+		<td>browse tab - go to last page of results</td>
+	</tr>
+	<tr>
+		<td>g</td>
+		<td>browse tab - go to previous page of results</td>
+	</tr>
+	<tr>
+		<td>h</td>
+		<td>browse tab - go to next page of results</td>
+	</tr>
+	<tr>
+		<td>o</td>
+		<td>optimize selected tables</td>
+	</tr>
+	</table>
+</tr>
+</table>

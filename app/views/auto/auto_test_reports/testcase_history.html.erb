@@ -1,0 +1,38 @@
+<%= render :partial => 'sidebar', :locals=>local_assigns %>
+<div align="left">
+	<% if @auto_bgjobs.size==0 %>
+	<p class="nodata"><%= l(:label_no_data) %></p>
+	<% else %>
+    <% table(@auto_bgjobs, %w{任务编号 测试用例 执行人 执行结果 创建时间 开始时间 结束时间 执行ip }) do |auto_bgjob, klass| -%>
+    <tr class="<%= klass %>">
+        <td>
+            <%= auto_bgjob.id %>
+        </td>
+        <td>
+            <%= auto_bgjob.testcase.title %>
+        </td>
+        <td>
+            <%= auto_bgjob.exec_user.nil? ? "" : auto_bgjob.exec_user.nickname %>
+        </td>
+        <td>
+        	<%= bgjob_result auto_bgjob %>
+        </td>
+		
+		<td>
+            <%= date_format auto_bgjob.created_at %>
+        </td>
+		
+        <td>
+            <%=  date_format auto_bgjob.started_at %>
+        </td>
+		<td>
+            <%=  date_format auto_bgjob.done_at %>
+        </td>
+		<td>
+            <%= auto_bgjob.exec_ip %>
+        </td>
+    </tr>
+    <% end %>
+	<%= will_paginate @auto_bgjobs,:params => {:id=>@testcase_id} %>
+	<% end %>
+</div>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE stax SYSTEM "stax.dtd">
+<stax>
+  <defaultcall function="main"/>
+  <function name="main">
+    <sequence>
+      <script>
+        from java.util import Calendar, Date, TimeZone
+        from java.text import SimpleDateFormat
+        from java.lang import String
+        from com.ibm.staf import STAFUtil
+        formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        currentTimestamp = Date()
+        zone = TimeZone.getTimeZone("GMT+8");
+        formatter.setTimeZone(zone);
+        dateString = formatter.format(currentTimestamp)
+        taskresult = 'passed'
+        bgjob_id = '<%= @id %>'
+        bgjob = u'<%= @bgjob %>'
+        starttime = dateString
+        endtime = starttime
+        taskstarttime = starttime
+      </script>
+      <!-- run scenario  -->
+
+        <sequence>
+          <script>
+            from java.util import Calendar, Date, TimeZone
+            from java.text import SimpleDateFormat
+            from java.lang import String
+            from com.ibm.staf import STAFUtil
+            formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            currentTimestamp = Date()
+            zone = TimeZone.getTimeZone("GMT+8");
+            formatter.setTimeZone(zone);
+            dateString = formatter.format(currentTimestamp)
+            starttime = dateString
+          </script>
+          <stafcmd>
+             <location>local</location>
+             <service>'PROCESS'</service>
+             <request>'START SHELL COMMAND %s SAMECONSOLE STDOUT <%= @staxml_log_path %> WAIT STDERRTOSTDOUT RETURNSTDOUT RETURNSTDERR' % bgjob</request>
+          </stafcmd>
+          <script>
+             if STAFResult['rc'] != '0':taskresult = 'failed'
+             exitcode = STAFResult['rc']
+          </script>
+          <call function="'checkScenarioResult'">
+            { 'bgjob_id': bgjob_id }
+          </call>
+        </sequence>
+
+    </sequence>
+
+  </function>
+
+  <function name="checkScenarioResult">
+    <function-map-args>
+      <function-optional-arg name="bgjob_id" default="''" />
+    </function-map-args>
+
+    <sequence>
+      <script>
+        from java.util import Calendar, Date, TimeZone
+        from java.text import SimpleDateFormat
+        from java.lang import String
+        from com.ibm.staf import STAFUtil
+        formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        currentTimestamp = Date()
+        zone = TimeZone.getTimeZone("GMT+8");
+        formatter.setTimeZone(zone);
+        dateString = formatter.format(currentTimestamp)
+        endtime = dateString
+
+
+        output = String()
+      </script>
+       <stafcmd>
+             <location>local</location>
+             <service>'FS'</service>
+             <request>'GET FILE <%=  @staxml_log_path %>'</request>
+      </stafcmd>
+      <script>
+        output = STAFResult
+        output = output.replace("\\r", "")
+        output = output.replace("&lt;", "&amp;lt;")
+        output = output.replace("&gt;", "&amp;gt;")
+        output = output.replace('"', "&amp;quot;")
+        output = output.replace('`', "'")
+        output = output.replace('{', "&amp;#123;")
+        output = output.replace("\\n", "&lt;br/>")
+      </script>
+      <log>output</log>
+        <!-- set bgjob's log -->
+     <process>
+        <location>'local'</location>
+        <command mode="'shell'">'ruby <%= @rails_root %>/script/auto_stax_callback --bgjob_id %s --exitcode %s --output "%s" --starttime "%s" --endtime "%s"' % (bgjob_id,exitcode, output,starttime,endtime)</command>
+        <workdir>'<%= @rails_root %>'</workdir>
+        <console use="'same'"/>
+      </process>
+      <log>'ruby <%= @rails_root %>/script/auto_stax_callback --bgjob_id %s  --exitcode %s --output "%s" --starttime "%s" --endtime "%s" ' % (bgjob_id,exitcode,output,starttime,endtime)</log>
+    </sequence>
+  </function>
+
+
+</stax>

@@ -1,0 +1,45 @@
+<% jquery_script do %>           
+	<% if params[:tab] %>                             
+			$('#project-daily').show()
+			$('#tab-<%= params[:tab] %>').trigger('click') 
+	<% end %>
+<% end %>
+<%= render(:partial => "shared/project_line_selector", :locals=>{:tab=>"tab2", :line_id=>@line.id})%>
+<%= render :partial => "live_check" %>
+<% @title = "项目维护" %>
+<h3><%= link_to_function "基线/OA", "Element.toggle('base_project');" %> </h3>
+<div id="base_project" style="display:none;">
+	<%= render :partial => "projects", :object=>[@line.base_project, @line.oa_project].compact %>
+	<% if @line.base_project.nil? %>
+		<p>基线库还没有，<%= link_to_popup "创建", :action => "new",'project[line_id]' => @line.id,  'project[project_type]' => "ProjectBase"  %>一个吧。</p>
+	<% end %>
+	<% if @line.oa_project.nil? %>
+		<p>OA库还没有，<%= link_to_popup "创建", :action => "new",'project[line_id]' => @line.id,  'project[project_type]' => "ProjectBase"  %>一个吧。</p>
+	<% end %>
+</div>
+
+<h3><%= link_to_function "项目/日常/技术选型类", "Element.toggle('project-daily');" %> </h3>
+<% tabs = [{:tab1 => "项目"},{:tab2 => "日常"},{:tab3 => "技术选型"}] %>
+	
+	<div id="project-daily" style="display:none;">	
+		<%= tabs_header(tabs) %>
+		
+		<% tab_content(:tab1, tabs) do %>
+			<%= link_to_popup "新建", :action => "new", 'project[line_id]' => @line.id, 'project[project_type]' => "Project" %>
+			<%= render :partial => "projects", :object=>@projects, :locals=>{:tab=>:tab1} %>
+		<% end %>
+		
+		<% tab_content(:tab2, tabs) do %>
+			<%= link_to_popup "新建", :action => "new", 'project[line_id]' => @line.id, 'project[project_type]' => "Daily" %>
+			<%= render :partial => "projects", :object => @daily_array, :locals=>{:tab=>:tab2}   %>
+		<% end %>
+		<% tab_content(:tab3, tabs) do %>
+			<%= link_to_popup "新建", :action => "new", 'project[line_id]' => @line.id, 'project[project_type]' => "TechProject" %>
+			<%= render :partial => "projects", :object => @tech_projects, :locals=>{:tab=>:tab3}   %>
+		<% end %>
+	</div>
+	
+	<h3><%= link_to_function "管理产品", "Element.toggle('products');" %> </h3>
+	<div id="products" style="display:none;">
+		<%= render :partial => "products", :locals => {:products=>@line.products} %>
+	</div>

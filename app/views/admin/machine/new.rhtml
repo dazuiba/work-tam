@@ -1,0 +1,4 @@
+<h1>录入机器</h1>
+<% form_for :machine, @machine, :url => { :action => "new" }, :method=>"post"  do |f| %>
+	<%= render :partial => "form", :locals => {:f=>f}  %>
+<% end %>

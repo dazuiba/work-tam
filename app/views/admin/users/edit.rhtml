@@ -1,0 +1,12 @@
+<h1>修改 【<%= @user.name %>】的信息</h1>
+<% form_for  :user , @user, :url=>{:action =>:edit}  do |f|-%>
+  姓名:<span class='required'>*</span></label>
+  <%= f.text_field :nickname %><br/>
+  <%#*密码：%>
+  <%#= f.text_field :password %>
+  <%#*<br/>%>
+  email:<%= f.text_field :email %><br/>
+  部门：<%= f.text_field :department %><br/>
+  <p><span class="required">*</span>为必输项</p>
+  <%= f.submit '保存', :class => 'default' %>
+<% end -%>

@@ -1,0 +1,9 @@
+<h2>新建测试集</h2>
+<% labelled_tabular_form_for :testsuite, @testsuite, 
+    :html => { :id => 'testsuite-form', :class=>"simple" } do |f| %>
+	<%= error_messages_for 'testsuite' %>
+	<%= hidden_field_tag :project_id, params[:project_id]%>
+	<%= hidden_field_tag :system, params[:system]%>
+	<%= render :partial => "form", :locals=>{:f=>f} %>
+<% end %>
+</div>

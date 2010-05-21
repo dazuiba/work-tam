@@ -1,0 +1,83 @@
+<%= render :partial => 'sidebar', :locals=>local_assigns %>
+<% tabs = [{:exec_result => "执行结果"},{:confirm_result => "验证结果"}] %>
+<%= tabs_header(tabs) %>
+<% tab_content(:exec_result, tabs) do %>
+<% table(@auto_bgjob_suites, ["产品线", '接口人', '用例数', '执行状态', "验证状态",result_stat_header,  '开始时间',  '结束时间', '执行IP']) do |auto_bgjob_suite, klass| -%>
+<tr class="<%= klass %>">
+    <td>
+        <%= auto_bgjob_suite.testsuite.project.product_line.name %>--<%= link_to auto_bgjob_suite.testsuite.title ,{:controller =>"/auto/bgjob_suites",:action => "show",:id =>auto_bgjob_suite.id  } %>
+    </td>
+    <td>
+        <%= auto_bgjob_suite.testsuite.project.users_of_role(Role::AUTO_CHARGE).select{|e|e.department !~ /自动化测试/}.map(&:nickname).join(",") %>
+    </td>
+    <td>
+        <%= auto_bgjob_suite.result_stats.jobs.count %>
+    </td>
+    <td>
+        <%= auto_bgjob_suite.state %>
+    </td>
+    <td>
+        <%= auto_bgjob_suite.confirm_state_text %>
+    </td>
+    <td>
+        <%= link_to_testsuite_result_stat auto_bgjob_suite %>
+    </td>
+    <td>
+        <%= date_format auto_bgjob_suite.started_at %>
+    </td>
+    <td>
+        <%= date_format auto_bgjob_suite.done_at %>
+    </td>
+    <td>
+        <%= auto_bgjob_suite.exec_ip %>
+    </td>
+</tr>
+<% end %>
+<table>
+    <tr>
+        <td>
+            <%= link_to_popup "发送报告", {:id => @job_category, :action=> :send_report} %>
+        </td>
+        <td>
+            <%= link_to("验证确认",{:id => @job_category, :go => "notify"}, :confirm => "系统将会向所有接口人发送邮件，确认操作？") %>
+        </td>
+    </tr>
+</table>
+<% end %>
+
+
+<% tab_content(:confirm_result, tabs) do %>
+<% if @job_category.report_send%>
+<% table(@auto_bgjob_suites, 
+	["产品线", '接口人', '测试集','用例数', '验证结果',
+	 '开始时间', '结束时间', '运行时长（秒）','详细信息'], :tag_option => 'cellpadding="2" border="1"') do |bgjob_suite, klass| -%>
+	 <% if bgjob_suite && bgjob_suite.state == 'done'%>
+    <tr>
+      <td>
+      	<%= bgjob_suite.testsuite.project.product_line.name %>  	
+      </td>       
+      <td><%= bgjob_suite.testsuite.project.users_of_role(Role::AUTO_CHARGE).select{|e|e.department !~ /自动化测试/}.map(&:nickname).join(",") %> </td>
+	  <td>
+      	<%= bgjob_suite.testsuite.title %>  	
+      </td>  
+      <td><%= bgjob_suite.result_stats.jobs.count %> </td>
+	 		<td> 
+	 			<% if(count = bgjob_suite.result_stats.confirm_failed_count)>0 %> 
+	 					<%= link_to "#{count} failed", auto_bgjob_suite_url(bgjob_suite), {:style=>"color:red;"}%>
+	 			<% else %>
+	 			  Passed
+	 			<% end %>
+ 			</td>      
+      <td><%= date_format bgjob_suite.started_at %> </td>
+	  	<td><%= date_format bgjob_suite.done_at  %> </td>
+	  	<td><%= bgjob_suite.duration %> </td>
+		<td><%=link_to "详细信息", auto_bgjob_suite_url(bgjob_suite)%></td>	
+    </tr>
+	<% end %>
+	<% end %>
+<% else %>
+	<p class="nodata"><%= l(:label_no_data) %></p>
+<% end %>
+
+<% end %>
+

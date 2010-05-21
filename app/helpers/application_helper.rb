@@ -25,8 +25,7 @@ module ApplicationHelper
 		else
 			link_to truncate(title,options[:length]||32), url, :title => title
 		end
-	end  
-	
+	end 
 	
 	def link_to_popup(name,options = {}, html_options = {})
     html_options.merge!(:rel=>"facebox")
@@ -34,16 +33,31 @@ module ApplicationHelper
 	end
   
 	def link_to_wangwang(user, options={})
-      if user.is_a? User
-        user = user.nickname
-      end
-      options.reverse_merge! :image=>true
-      text = if options[:image]
-        %[<img border='0' src='http://amos1.taobao.com/online.ww?v=2&uid=#{user}&site=cntaobao&s=1&charset=utf-8' alt=''/>]
-      else
-        user
-      end   
-      %[<a target='_blank' href='http://amos1.taobao.com/msg.ww?v=2&uid=#{user}&s=1&charset=utf-8'>#{text}</a>]
+    if user.is_a? User
+      user = user.nickname
     end
+    options.reverse_merge! :image=>true
+    text = if options[:image]
+      %[<img border='0' src='http://amos1.taobao.com/online.ww?v=2&uid=#{user}&site=cntaobao&s=1&charset=utf-8' alt=''/>]
+    else
+      user
+    end
+    %[<a target='_blank' href='http://amos1.taobao.com/msg.ww?v=2&uid=#{user}&s=1&charset=utf-8'>#{text}</a>]
+  end
   
+  def all_product_line
+		Base::ProductLine.all
+	end
+
+  def long_text(text, size=32)
+		%[<span title="#{text}">#{truncate(text, size)}</span>]
+	end
+  
+  def hidden_params_field_tag(name, options={})
+		param_name = options[:param_name]||name
+		if value = params[param_name]
+			hidden_field_tag(name, value)
+		end
+	end
+
 end

@@ -1,0 +1,23 @@
+<%= link_to "更新", {:action => "sync_all"}, {:confirm=>"确定？"} %>
+
+
+<% table(@daemons, %w{title 操作 ctl_file 当前状态 PID 内存 启动时间 最后活跃时间 运行时长 }) do |daemon, klass| -%>
+  <tr class="<%= klass %>">
+		<td><%=  link_to_popup daemon.title,  :action=>"log", :id=>daemon.id %></td>
+		<td>
+			<% if daemon.state == "down" %>
+				<%= link_to "启动", {:action => "do_action", :go=>"start", :id=>daemon}, :confirm=>"确定？" %>
+			<% else %>
+				<%= link_to "停止", {:action => "do_action", :go=>"stop", :id=>daemon}, :confirm=>"确定？"  %> 
+				<%= link_to "重启", {:action => "do_action", :go=>"restart", :id=>daemon}, :confirm=>"确定？"  %> 
+			<% end %>
+		</td>
+		<td><%=  daemon.ctl_name %></td>
+		<td><%=  daemon.state%></td>		
+		<td><%=  daemon.pid %></td>
+		<td><%=  number_to_human_size(daemon.mem) %></td>
+		<td><%= format_time daemon.started_at %></td>
+		<td><%= format_time daemon.updated_at %> </td>
+		<td><%= "#{daemon.duration}秒" if daemon.duration %>     </td>
+  </tr>
+<% end %>

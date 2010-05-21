@@ -1,0 +1,38 @@
+<style type="text/css" media="screen">
+	#submit_button{
+		width:65px;	
+		height:80px;	
+		margin-bottom: 80px;
+	}
+</style>
+
+<script type="text/javascript" charset="utf-8">
+	
+</script>
+	<h3>请输入查询条件</h3>
+	
+<% form_tag(:action => "execute_sql") do %>
+选择数据库 :
+<p><%= select_tag "dm_config_id", 			
+									 options_from_collection_for_select(DmConfig.enabled.all, 'id', 'name', params[:dm_config_id].to_i)%> 								
+									 
+选择数据表 :						
+<p><%= select_tag "dm_config_id", 			
+									 options_for_select(@tables, params[:dm_config_id].to_i)%>	</p>														 
+									 
+	<%= text_area_tag :sql,  params[:sql], :cols => 80, :rows => 5%>  
+	<%= submit_tag "执行", :disable_with => '执行ing...', :id => "submit_button" %>
+<% end %>
+
+
+<% if @result.nil?%>
+	<% table(@result, %w{名称}) do |project, klass| -%>
+		  <tr class="<%= klass %>">
+				<td><%= link_to h(project.name),{:action => 'settings',:id => project} %></td>
+		  </tr>
+	<% end %>
+	<% if @result.respond_to? :total_pages %>
+		<p class="pagination"><%= will_paginate projects, :params => page_params%></p>
+	<% end %>
+
+<% end  %>

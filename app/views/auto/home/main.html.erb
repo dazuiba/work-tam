@@ -1,0 +1,164 @@
+<link type="text/css" rel="stylesheet" href="/automan/stylesheets/packed_douban209.css">
+<link type="text/css" rel="stylesheet" href="/automan/stylesheets/packed__all41.css">
+
+<%= javascript_include_tag  'jquery', 'application'%>
+
+<style type="text/css" media="screen">
+  .anony-nav {margin-bottom:20;}
+  #top-title {
+    margin-right:2.8em;
+    margin-top:3px;
+  }
+</style>
+<% jquery_script do  %>
+  $(document).ready(function() {
+  $("#menu1 .clearfix").addClass("on");
+  $("#content_menu1").show();
+
+  $(".movie_new .content").hide();
+  $("#newcontent1").show();
+
+  $(".movie_review .content").hide();
+  $("#review1").show();
+  })
+  $(function() {
+  var hl=$("#hot_movies_menu li"),content=$(".movie_headerline .content");
+  hl.mouseover(function() {
+  $(".menu li .clearfix").removeClass("on");
+  $("#"+this.id+" .clearfix").addClass("on");
+  content.hide();
+  $("#content_"+this.id).show();
+  return false;
+  });
+  $(hl[0]).addClass("on");
+  });
+
+  $(function(){
+  var b=$("#db-groups-cate .list li a"), a=$("#db-groups-cate .content .item"),c=0;
+
+  b.each(function(f,d){$(d).addClass("tab_"+f)});
+  a.each(function(f,d){$(d).addClass("item_"+f)});
+  b.click(function(f){
+  f.preventDefault();
+  var d=$(f.target);
+  d=d.parent();
+  f=parseInt(f.target.className.match(/tab_(\d{1,2})/i)[1],10);
+  if(c!==f){
+  d.parent().find(".on").removeClass("on");
+  d.addClass("on");a.filter(".item_"+c).fadeOut("fast");
+  a.filter(".item_"+f).removeClass("hide").fadeIn("fast");
+  c=f
+  }
+  })
+  })
+<% end %>
+
+<div class="top-nav">
+  <div class="bd">
+    <div id="top-title">
+      <span style="font-size:18">TAM首页</span>·&nbsp; ·&nbsp; · <%= link_to "反馈意见", "mailto:nanfei@taobao.com" %>
+    </div>
+  </div>
+</div>
+<div id="wrapper">
+  <div id="content">
+    <div class="grid-16-8 clearfix">
+      <div class="article">
+        <div class="bd">
+          <h2> Automan的更新日志
+            &nbsp; ·&nbsp; ·&nbsp; ·&nbsp; ·&nbsp; ·&nbsp; · <span class="pl">(
+              <%= link_to_redmine "更多", "projects/tam/boards/#{@log_board.id}" %> ) </span> </h2>
+          <ul class="clearbox">  
+            <% @log_board.messages.each do|log| %>
+              <li class="block clearfix">
+                <div class="title">
+                  · &nbsp; <%= link_to_redmine log.subject, "/boards/#{log.board_id}/topics/#{log.id}", :popup=>true %> </div>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="cate-mod" id="db-groups-cate">
+          <div class="hd">
+            <h2> 近期执行的任务
+              &nbsp; ·&nbsp; ·&nbsp; ·&nbsp; ·&nbsp; ·&nbsp; · <span class="pl">( <a href="/auto/testsuites/list_by_machine?tab=testcases">更多</a> ) </span> </h2>
+          </div>
+          <div class="bd">
+            <div class="list">
+              <ul>
+                <% @product_lines.each_with_index do|line, i| %>
+                  <li class="<%= "on" if i==0 %>" ><a href="#"><%= line.name %></a></li>
+                <% end %>
+              </ul>
+            </div>
+            <div class="content">
+              <% @product_lines.each_with_index do |line, i|%>
+                <div class="item <%= "hide" if i!=0 %>">
+                  <table class="olt"><tbody>
+                      <tr>
+                        <td>创建人</td><td>用例名称</td><td>执行结果</td><td>执行IP</td><td>开始时间</td>
+                      </tr>
+                      <% @jobs_map.fetch(line.id).each do|job| %>
+                        <tr class="pl">
+                          <td><%= exec_user(job.exec_user_id) %></td>
+                          <td><%= link_to_long_title job.testcase.title, "/auto/testcases/#{job.testcase.id}/show_testcase", :length=>16 %></td>
+                          <td><%= bgjob_result(job, :link_disable=>true, :truncate=>14) %></td>
+                          <td><%= job.exec_ip %></td>
+                          <td><%= date_format(job.started_at) %></td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              <% end %>
+              <span class="x1">&nbsp;</span>
+              <span class="x2">&nbsp;</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="aside">
+        <div class="clearfix"></div>  
+        <div class="mod" id="db-talk"> <div class="hd">  
+            <% if error = flash[:message] %>
+              <h2 style="color:red"> <%= error %> </h2>
+            <% end %>
+            <h2> 提意见······ 或者
+              <a href="mailto:nanfei@taobao.com">发送邮件</a></h2>
+          </div>
+          <form action="feedback" method="post" name="mbform"><div style="display: none;"><input type="hidden" value="6UKD" name="ck"></div>
+            <p>标题：<input type="text" value="" maxlength="100" size="30" name="subject"></p>
+            <p>   <input type="radio" name="type" checked value="问题"> 问题
+              <input type="radio" name="type"   value="建议"> 建议</p>
+            <div class="item">
+              <textarea rows="1" style="height:130px;" name="content"></textarea>
+            </div>
+            <div class="btn">
+              <input type="submit" value="提交" class="bn-cta"><span class="tipmsg"></span>
+            </div>
+          </form>
+        </div>
+        <div id="db-online-events" class="mod">
+          <div class="hd">
+            <h2> 大家的意见
+              ······ <span class="pl">(  <%= link_to_redmine "更多", "projects/tam/boards/#{@sug_board.id}" %></a> ) </span> </h2>
+          </div>
+          <div class="bd">
+            <ul class="clearbox">   
+              <% @sug_board.messages.each do|sug| %>
+                <li class="block clearfix">
+                  <div class="title">
+                  <%= link_to_redmine sug.subject, "/boards/#{sug.board_id}/topics/#{sug.id}" %> </div>
+                  <div class="desc">
+                    <%= textilizable(sug.content) %>
+                  </div>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="extra"> </div>
+    </div>
+  </div>
+</div>

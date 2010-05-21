@@ -6,7 +6,9 @@
 #
 
 require "extensions/_base"
-
+class AssertionError < Exception
+	
+end
 ExtensionsProject.implement(Kernel, :require_relative) do
   module Kernel
       #
@@ -38,5 +40,13 @@ ExtensionsProject.implement(Kernel, :require_relative) do
     def require_relative(path)
       require File.join(File.dirname(caller[0]), path.to_str)
     end
+    
+  	def assert(cond, message = "Asserion Failed")
+			raise AssertionError.new(message) unless cond
+		end
+		
+		def assert_equal(a,b)
+			raise AssertionError.new("#{a.inspect} and #{b.inspect} not equal") if a!=b
+		end
   end
 end

@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+bak_dir = "/var/www/dbbak"
+FileUtils.mkdir_p bak_dir
+`mysqldump -htwork.taobao.net -usa -p20091001 twork_production|gzip >#{bak_dir}/#{Time.now.strftime("%Y-%m-%d_%H_%M_%S")}.sql.gz`
+`"find #{bak_dir}  -ctime +7 -exec rm -f {}\\;"`

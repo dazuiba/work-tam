@@ -1,0 +1,24 @@
+<div id="tab-content-suites" class="tab-content" style="">
+  <%= render :partial => "auto/testcases/search_form" %>
+  <div class="tabs">
+    <ul>
+      <li><a href="#" class="selected" id="tab-testcase_list">用例列表</a></li>
+      <li>包含<span style="color: red;"><%= @testcases.total_entries %></span>个用例</li>
+    </ul>
+  </div>
+  <div id="sub_items_suite">
+    <% table(@testcases, "ID 标题 创建时间 操作".split(" ")) do |f,klass| -%>
+      <tr>
+        <td width="50"><%= f.short_id %></td>
+        <td width="300"><a href="/auto/testcases/<%= f.id %>/show_testcase"><%= f.title %></a></td>
+        <td width="150"><%= date_format(f.created_at) %></td>
+        <%- if f.script.nil? -%>
+          <td>无脚本</td>
+        <%- else -%>
+          <td><a rel="facebox" href="/auto/bgjobs/<%= f.id %>/create_job?target=testcase_list">运行</a></td>
+        <%- end -%>
+      </tr>
+    <% end %>
+    <%= will_paginate @testcases, :prev_label => '上一页', :next_label => '下一页', :class => "digg_pagination" %>
+  </div>
+</div>

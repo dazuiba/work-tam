@@ -1,0 +1,66 @@
+<% @title = "系统模块维护" %>
+
+<% crumbs = if @menu.id 
+				[Menu.new(:name=>"Root")]+@menu.ancestors+[@menu]
+			else
+				[Menu.new(:name=>"Root")]
+			end
+%>
+
+<%= breadcrumb crumbs.map{|e|link_to(e.name, :action => "show", :id => e)} %>
+
+<%= link_to_popup "新建", :action => "new", "menu[parent_id]" => @menu%>
+<% if @menu.parent.nil? && @menu.id %>
+
+<% jquery_script do%>
+	$("#inner_menu").live("click", function(){
+       		$('#inner_menu_info').toggle()
+  });
+<% end %>
+
+	<p>
+	<label for="inner_menu">使用内置menu</label>
+	<%= check_box_tag "inner_menu", "true", false%>	
+</p>
+
+<div id="inner_menu_info" style="display:none;" class="box">
+	<p>
+		<label for="project_name">首页<span class="required">*</span></label>	
+		<span id="inner_url<%= @menu.id %>"><%= @menu.inner_url||"(未设置)" %></span>
+	 		<script type="text/javascript" charset="utf-8"> 
+		    		new Ajax.InPlaceEditor('inner_url<%= @menu.id %>', '<%= url_for(:action=>"update", :key=>"inner_url", :id=>@menu.id) %>');
+		  </script>
+	</p>
+</div>
+<% end  %>
+<% table(@children, %w{名称 标识符 操作 URL}) do |menu, klass| -%>
+	  <tr class="<%= klass %>">
+	  	<td>
+	  			<span id="name<%= menu.id %>"><%=h menu.name||"(未设置)" %></span>
+		    	<script type="text/javascript" charset="utf-8"> 
+		    		new Ajax.InPlaceEditor('name<%= menu.id %>', '<%= url_for(:action=>"update", :key=>"name", :id=>menu) %>');
+		    	</script>    	
+  		</td>
+  		
+  		<td>
+	  	 		<span id="id_string<%= menu.id %>"><%= menu.id_string||"(未设置)" %></span>
+	 		<script type="text/javascript" charset="utf-8"> 
+		    		new Ajax.InPlaceEditor('id_string<%= menu.id %>', '<%= url_for(:action=>"update", :key=>"id_string", :id=>menu.id) %>');
+		  </script>
+  		</td>
+ 
+	  	<td>
+	  			<%= link_to "子菜单", :action => "show", :id => menu %>|||
+	  			<%= link_to "删除", {:action=>:destroy, :id=> menu}, :confirm => "确定删除？", :method => "delete" %>
+  		</td>
+	  	<td>
+	  			<span id="url<%= menu.id %>"><%=h menu.url||"(未设置)" %></span>
+		    	<script type="text/javascript" charset="utf-8"> 
+		    		new Ajax.InPlaceEditor('url<%= menu.id %>', '<%= url_for(:action=>"update", :key=>"url", :id=>menu) %>');
+		    	</script>    	
+  		</td>
+	  </tr>
+<% end %>
+<% if @menus.respond_to? :total_pages %>
+	<p class="pagination"><%= will_paginate menus%></p>
+<% end %>

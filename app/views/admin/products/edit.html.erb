@@ -1,0 +1,24 @@
+<h1>编辑产品</h1>
+
+<% form_for(@product) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    ID<br />
+    <%= f.text_field :id %>
+  </p>
+  <p>
+    名称<br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    描述<br />
+    <%= f.text_field :desc %>
+  </p>
+  <p>
+    <%= f.submit '更新' %>
+  </p>
+<% end %>
+
+<%= link_to '显示', @product %> |
+<%= link_to '返回', admin_products_path %>

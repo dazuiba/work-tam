@@ -1,0 +1,20 @@
+<% projects = Array(projects) 
+   page_params = {}
+   page_params[:tab] = tab if local_assigns[:tab]
+%>
+<br></br>
+<% table(projects, %w{名称 成员 qc_name  qc_db  }) do |project, klass| -%>
+	  <tr class="<%= klass %>">
+			<td><%= link_to h(project.name),{:action => 'settings',:id => project} %></td>
+			<td>
+				<%  project.members.each do|e| %>
+					<p> <%= e.role.name %>: <%= e.user.nickname %> </p>
+				<% end %>
+			</td>
+			<td><%=  h(project.qc_name) %></td>
+			<td><%=  h(project.qc_db) %></td>
+	  </tr>
+<% end %>
+<% if projects.respond_to? :total_pages %>
+	<p class="pagination"><%= will_paginate projects, :params => page_params%></p>
+<% end %>

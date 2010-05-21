@@ -1,0 +1,2 @@
+FILE_NAME = 'auto_svn_sync.rb'
+require File.dirname(__FILE__)+'/ctrl_helper.rb'

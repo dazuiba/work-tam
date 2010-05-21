@@ -1,0 +1,37 @@
+<%= render :partial => 'sidebar', :locals=>local_assigns %>
+<%= tabs_header(@list_cate_tabs) %>
+<% form_tag({:action=>"list"}) do %>
+<table>
+	<tr>
+		<td>
+			执行时间:<%= text_field_tag("started_at" ,@started_at.nil? ? "": @started_at,{:readOnly => true}) %>
+			<%= calendar_for "started_at" %><br/>
+			<input type="hidden" id = "category_id" name="category_id" value="category_<%=@category_id%>">
+		</td>
+		<td><%= submit_tag "查询" %></td>
+	</tr>
+</table>
+<% end %>
+<% @list_cate_tabs.each{ |tab| %>
+<% tab_content(tab[:name], @list_cate_tabs) do%>
+	<% table(@auto_bgjob_categories, %w{ID  执行人  开始/结束时间  操作 }) do |auto_bgjob_category, klass| -%>
+		<% if ("category_"+auto_bgjob_category.testsuite_category_id.to_s).to_sym == tab[:name]%>
+	    	<tr class="<%= klass %>">
+	      	<td><%= auto_bgjob_category.id %> </td>
+	      	<td><%= exec_user(auto_bgjob_category.exec_user_id) %> </td>	      	
+	      	<td><%= date_format auto_bgjob_category.started_at %>~<%= date_format auto_bgjob_category.done_at %> </td>
+		  	<td>
+		  		<%= link_to "查看报告", {:action => "report",:id =>auto_bgjob_category.id } %></td>	    
+    		</tr>
+		<% end %>
+	<% end %>
+	<% if @active_tab.to_sym == tab[:name] %>
+	<%= will_paginate @auto_bgjob_categories,:params => {:category_id=>@active_tab,:started_at=>@started_at} %>
+	<% end %>
+<% end %>
+<% } %>
+<script type="text/javascript">
+	window.onload=function(){
+    showTab('<%=@active_tab%>',null);
+  	}
+</script>

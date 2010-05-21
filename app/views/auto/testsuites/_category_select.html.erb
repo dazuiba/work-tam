@@ -1,0 +1,61 @@
+<style>
+  #changeClassDiv select{
+    height:130px;
+  }
+  .div1{
+    padding: 8px;
+  }
+
+  #cateViewer{
+    color:red;
+   }
+</style>    
+	<div id="changeClassDiv">
+		<table border="0" cellpadding="0" cellspacing="0" class="no-fix">
+			<tr>
+				<td>
+					<div class="box-out"></div>
+					<div class="box-in"></div>
+					<div class="box-inner">
+						<div class="div1">
+							<strong>
+                当前分类:
+							</strong>
+              <input type="hidden" name="category_id" id="category_id">
+              <span id='cateViewer'></span>
+						</div>
+						<table border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td>
+                  <select id="ClassLevel1" style="WIDTH: 125px" size="23" name="ClassLevel1">
+										</select>
+								</td>
+								<td width="20px">
+									<div align="center">
+										<b>→</b>
+									</div>
+								</td>
+								<td>
+									<select id="ClassLevel2" style="WIDTH:125px" size="23" name="ClassLevel2">
+										</select>
+								</td>
+								<td width="20px">
+									<div align="center" id="jiantou">
+										<b>→</b>
+									</div>
+								</td>
+								<td>
+									<select id="ClassLevel3" style="WIDTH:125px" size="23" onchange="getCidValue();" name="ClassLevel3">
+										</select>
+								</td>
+							</tr>
+						</table>
+						<div id="ca_error"> 
+						</div>
+					</div>
+					<div class="box-in"></div>
+					<div class="box-out"></div>
+				</td>
+			</tr>
+		</table>
+	</div>

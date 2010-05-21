@@ -1,4 +1,5 @@
 class PmLibsController < ApplicationController
+	before_filter :find_one, :only=>[:show, :edit, :update, :destroy]
   # GET /pm_libs
   # GET /pm_libs.xml
   def index
@@ -13,7 +14,6 @@ class PmLibsController < ApplicationController
   # GET /pm_libs/1
   # GET /pm_libs/1.xml
   def show
-    @pm_lib = PmLib.find(params[:id])  
     @folder_root = @pm_lib.folder_root                 
     respond_to do |format|
       format.html {
@@ -63,8 +63,6 @@ class PmLibsController < ApplicationController
   # PUT /pm_libs/1
   # PUT /pm_libs/1.xml
   def update
-    @pm_lib = PmLib.find(params[:id])
-
     respond_to do |format|
       if @pm_lib.update_attributes(params[:pm_lib])
         flash[:notice] = 'PmLib was successfully updated.'
@@ -80,7 +78,6 @@ class PmLibsController < ApplicationController
   # DELETE /pm_libs/1
   # DELETE /pm_libs/1.xml
   def destroy
-    @pm_lib = PmLib.find(params[:id])
     @pm_lib.destroy
 
     respond_to do |format|
@@ -88,4 +85,13 @@ class PmLibsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+private
+	def find_one
+		@pm_lib = if params[:id].to_i>0
+			PmLib.find(params[:id])
+		else
+			PmLib.find_by_name(params[:id])
+		end
+	end
 end

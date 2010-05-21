@@ -1,0 +1,96 @@
+<script type="text/javascript" src="/javascripts/common.js"></script>
+<script type="text/javascript">
+  function MakeStrategy(){
+    if ($("redo").checked){
+      Element.show("strategy");
+    }
+    else{
+      Element.hide("strategy");
+    }
+  }
+  
+  function checkForm(){
+    var arr_exec = document.getElementsByName("suites_and_case[]");
+    var size = arr_exec.length
+    var flag = false
+    for(var i=0;i<size;i++){
+      if (arr_exec[i].checked){
+        flag = true;
+        break;
+      }
+    }
+    if (!flag){
+      alert("请选择下架脚本")
+    }
+    return flag;
+  }
+</script>
+<SCRIPT LANGUAGE='JavaScript'>
+  <!--
+  function ResumeError() {
+    return true;
+  }
+  window.onerror = ResumeError;
+  // -->
+</SCRIPT> 
+<%= render :partial => "auto/sidebar" %>
+<h2>测试集: 【<%= @testsuite.title %>】（共<%= @testsuite.included_testcases_count %>个用例）</h2>
+<div class="contextual">
+  <%= link_to_if_authorized l(:button_edit),
+    edit_auto_testsuite_url(:id => @testsuite),
+    :class => 'icon icon-edit',
+    :accesskey => accesskey(:edit) %>
+  <%= link_to_if_authorized l(:button_delete),
+    @testsuite,
+    :confirm => '将会删除所有相关资料',
+    :method => :delete,
+    :class => 'icon icon-delete',
+    :accesskey => accesskey(:delete) %>
+</div>
+<div class="box">
+  <%= testsuite_info(@testsuite) %>
+</div>		
+
+<% tabs = [{:logs => "执行历史"}, {:testcases => "包含用例"}]%> 
+
+<%= tabs_header(tabs) %>
+
+
+<% tab_content(:logs, tabs) do%>
+  <h3>执行历史  </h3>
+  <div style="float: left;">
+    <%= link_to_popup("运行", new_auto_testsuite_bgjob_suite_url(@testsuite), {:style=>"color: red;font: 18px Arial,Helvetica,sans-serif;font-weight: bold;"})  %>
+  </div>
+  <% table(@bgjob_suites, "ID 执行人  创建时间 更新时间 运行状态 Progress&#{result_stat_header} IP  操作".split(" ")) do |bgjob_suite, klass| -%>
+    <tr class="<%= klass %>">
+      <td><%= link_to "##{bgjob_suite.id}", auto_bgjob_suite_url(bgjob_suite) %> </td>
+      <td><%=  bgjob_suite.exec_user.nil? ? "" : bgjob_suite.exec_user.nickname %> </td>
+      <td><%= format_time(bgjob_suite.created_at) %> </td>
+      <td><%= format_time(bgjob_suite.updated_at)%> </td>
+      <td><%= bgjob_suite.state %> </td>
+      <td class="left-align">
+        <span class="progressBar" id="bgjob_<%= bgjob_suite.id %>"> <%= bgjob_suite.progress.to_i %>%</span>
+          <%= link_to_testsuite_result_stat(bgjob_suite) %>
+      </td>
+      <td>
+        <%= bgjob_suite.exec_ip %>
+      </td>
+      <td>
+        <%= link_to "撤销",{:controller => "auto/bgjob_suites/",  :action => "cancel", :id => bgjob_suite}, :confirm=>"确定？" if ["waiting", "canceled"].include? bgjob_suite.state%>
+      </td>
+    </tr>
+  <% end %>
+<% end %>
+
+<% tab_content(:testcases, tabs) do %>
+  <h3>包含的用例</h3>
+  <div id="tc-list">
+    <% form_tag({:action=>"pick_down"}) do %>
+    <%#*<input type="button" onclick="selectAll('suites_and_case[]')" value="全选">%>
+    <%#*<input type="button" onclick="unselectAll('suites_and_case[]')" value="反选">%>
+    <%#= submit_tag "下架",:onclick => "return checkForm()" %>
+      <%=hidden_field_tag "id",@testsuite.id %>
+      <%= render :partial => "testcases", :object => @testcases%>
+    <% end %>
+  </div>
+<% end %>

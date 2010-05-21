@@ -1,0 +1,80 @@
+<script type="text/javascript">
+  <!--
+  function toggle_visibility() {
+    if ($("plann_day").checked){
+      Element.hide("week");
+    }
+    else{
+
+      Element.show("week");
+    }
+  }
+
+  function Checked(values){
+    Element.show("week");
+    var value = values
+    var checkboxes = [];
+    var boxes = $$('input[type="checkbox"]')
+    boxes.each(function(box){
+      if (box.name == 'exec_plan[wday][]'){checkboxes.push(box)}
+    });
+    value.each(function(i){checkboxes[i].checked = true;})
+
+  }
+
+  function unChecked(){
+    Element.hide("week");
+    var checkboxes = [];
+    var boxes = $$('input[type="checkbox"]')
+    boxes.each(function(box){
+      if (box.name == 'exec_plan[wday][]'){checkboxes.push(box)}
+    });
+
+    checkboxes.each(function(e){e.checked = false;});
+
+  }
+
+    function isTestPlan(){
+    if ($("exec_plan_start_time").options[0].selected == true){
+      alert("请选择计划时间！")
+      return false;
+    }
+    else{
+      return true;
+    }
+  }
+
+ window.onload=function()
+  {
+    toggle_visibility()
+  } 
+  
+
+  //-->
+</script>
+
+<% form_for :testplan, :url => testplan_auto_testsuites_path(), :html => { :method => :post } do |f| %>
+  创建人    <%= select :user,:nickname,User.all.collect{|u|[u.name,u.name]},:selected => session[:user],:include_blank => true %>
+  测试集名称    <%= f.text_field :title,:value => session[:testplan],:size => 10 %>
+
+  <%= submit_tag ' 搜 索 ' %>
+<% end %>
+
+<% table(@testplans, %w{测试集ID 测试集名称 创建人  计划日期 计划时间 执行机器 操作}) do |testplan, klass| -%>
+  <tr class="<%= klass %>">
+    <td><%=  testplan.id%></td>
+    <td><%= testplan.title%></td>
+    <td><%=  exec_user(testplan.created_by_id)%></td>
+    <td><%=  plan_date(testplan.exec_plan["wday"]) %></td>
+    <td><%=  plan_time(testplan) %></td>
+    <td><%=  testplan.plan_ip%></td>
+    <td>
+      <div class="contextual">
+        <%= link_to_edit_plan(testplan) %>
+        <%= link_to_cancel(testplan)%>
+      </div>       
+    </td>
+  </tr>
+
+<% end %>
+<%= will_paginate @testplans %>

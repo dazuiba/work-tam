@@ -1,0 +1,12 @@
+<% all_projects = @product.product_line.projects %>
+<strong>当前产品：<%= @product.name %></strong>
+<% form_remote_tag :url => {} do  %>
+	<% table all_projects, ["项目"] do|project,clazz| %> 
+		<tr class ="<%= clazz %>">
+			<td>
+				<%= check_box_tag("projects[]", project.id, @product.project_ids.include?(project.id))%> 
+			<%= project.name %></td>
+		</tr>
+	<% end %>
+	<%= submit_tag "Save" %>
+<% end %>

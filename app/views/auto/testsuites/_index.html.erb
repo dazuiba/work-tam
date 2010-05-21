@@ -1,0 +1,21 @@
+<div class="contextual">
+	<%= link_to "新建", {:action => "new"}, {:class => "icon icon-add" } %>	
+</div>
+
+<% form_tag({}) do -%>	
+	<% if @suites.empty? %>
+		<p class="nodata"><%= l(:label_no_data) %></p>
+	<% else %>
+		<table>
+			<tr><th>创建日期</th><th>标题</th><th>创建者</th></tr>
+			<% @suites.each do|suite| %>
+			  <tr>
+			    <td><%= format_time suite.created_at %></td>
+			    <td><%= link_to suite.title, :action => "show", :id=>suite %></td>
+			    <td><%= link_to_user suite.created_by %></td>
+			  </tr>
+		  <% end %>
+		</table>
+	<% end %>
+<% end -%>
+<p class="pagination"><%= will_paginate @suites%></p>

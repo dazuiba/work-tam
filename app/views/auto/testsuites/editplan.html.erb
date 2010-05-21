@@ -1,0 +1,8 @@
+<%= javascript_include_tag "prototype" %>
+<% form_for :testsutie, @testsuite, :url => {:action => :updateplan}, :html => {:method => :put}do |f| %>
+  <%= f.error_messages %>
+ <%= render :partial => "plan", :locals => {:f => f}%>
+  <p>
+    <%= f.submit '更 新',:onclick => "return isTestPlan()" %>
+  </p>
+<% end %>

@@ -1,0 +1,30 @@
+<table class="list testcases">
+    <thead><tr>
+        <th><%= link_to image_tag('toggle_check.png'), {}, :onclick => 'toggletestcasesSelection(Element.up(this, "form")); return false;',
+                                                           :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}" %>
+        </th>
+				<%= sort_header_tag('id', :caption => '#', :default_order => 'desc') %>
+        <% query.columns.each do |column| %>
+          <%= column_header(column) %>
+        <% end %>
+	</tr></thead>
+	<tbody>
+	<% testcases.each do |testcase| -%>
+	<tr id="testcase-<%= testcase.id %>" class="hascontextmenu <%= cycle('odd', 'even') %> ">
+	    <td class="checkbox"><%= check_box_tag("tc_ids[]", testcase.id, false, :id => nil) %></td>
+		<td>
+				<%= link_to testcase.id, :controller => 'testcases', :action => 'show', :id => testcase %>				
+		</td>
+    <% query.columns.each do |column| %>
+        <%= content_tag 'td', column_content(column, testcase), :class => column.name %>
+    <% end %>
+	</tr>
+	<% end -%>
+	</tbody>
+</table>
+<p class="pagination"><%= will_paginate testcases%></p>
+<div id="context-menu" style="display: none;"></div>
+<% 
+	context_url_hash = {:controller => 'testcases', :action => 'context_menu', :suite=> local_assigns[:suite]}
+%>
+<%= javascript_tag "new ContextMenu('#{url_for(context_url_hash)}')" %>

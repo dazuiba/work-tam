@@ -1,0 +1,85 @@
+<%# content_for :sidebar do %>
+<%# end %>
+<% tabs = [{:suites => "测试集"}, {:testcases => "测试用例"}]%>
+<%= tabs_header(tabs) %>
+<% tab_content(:suites, tabs) do%>
+  <h3>测试集 </h3>
+  <% form_for :bgjobs, :url=>{:tab=>"suites"}  do  %>
+    <table>
+      <tr>
+        <td>执行IP&nbsp;&nbsp;&nbsp;:<%= select :bgjob,:ip, ip_for_select({:local => true}),:selected => session[:bgjob]["ip"],:include_blank => true %></td>
+
+        <td> 创建人&nbsp;&nbsp;&nbsp;:<%= text_field :bgjob, :user_name,:value => session[:bgjob]["user_name"] ,:size => 15%></td>
+        <td>起始时间:<%= calendar_date_select_tag "bgjob[start_time]",session[:bgjob]["start_time"],:popup => :force %></td>
+
+      </tr>
+      <tr>
+        <td>运行状态:<%= select :bgjob, :state ,state_options,:selected => session[:bgjob]["state"],:include_blank => true,:size => 15 %></td>
+        <td>任务名称:<%= text_field :bgjob, :name,:value => session[:bgjob]["name"] ,:size => 15 %></td>
+        <td>结束时间:<%= calendar_date_select_tag "bgjob[end_time]",session[:bgjob]["end_time"],:popup => :force %></td>
+        <td><%= submit_tag "搜索" %></td>
+      </tr>
+    </table>
+    <div id="sub_items_suite">
+      <% table(@suite_bgjobs, "测试集名称 创建人 运行状态 Progress&#{result_stat_header} 执行ip 添加时间 开始时间 结束时间 操作".split(" ")) do |f,klass| -%>
+        <tr class="<%= klass %>">
+          <td align="left"><%= link_to "#{ testsuite_tilte(f)}", auto_bgjob_suite_url(f) %> </td>
+          <td><%= exec_user(f.exec_user_id) %></td>
+          <td><%= state_format(f.state) %></td>
+          <td class="left-align">
+            <span class="progressBar" id="bgjob_<%= f.id %>"> <%= f.progress.to_i %>% </span>
+              <%= link_to_testsuite_result_stat(f) %>
+          </td>
+          <td><%= f.exec_ip %></td>
+          <td><%= date_format(f.created_at) %></td>
+          <td><%= date_format(f.started_at) %></td>
+          <td><%= date_format(f.done_at) %></td>
+
+          <td>
+            <%= link_to "删除",{:controller => "auto/bgjob_suites/",  :action => "joblistcancel", :id => f}, :confirm=>"确定删除测试集任务吗？" if ["waiting", "canceled", "running"].include? f.state %>
+          </td>
+        </tr>
+      <% end %>
+      <%= will_paginate @suite_bgjobs, :params => {:tab=>"suites",:bgjob => session[:bgjob]}%>
+    </div>
+  <% end %>
+<% end %>
+
+<% tab_content(:testcases, tabs) do %>
+  <h3>测试用例</h3>
+
+  <% form_for :case, :url=>{:tab=>"testcases"}   do  %>
+    <table>
+      <tr>
+        <td>执行IP&nbsp;&nbsp;&nbsp;:<%= select :case,:ip, ip_for_select({:local => true}),:selected => session[:case]["ip"],:include_blank => true %></td>
+        <td> 创建人&nbsp;&nbsp;&nbsp;:<%= text_field :case, :user_name,:value => session[:case]["user_name"],:size => 15%></td>
+        <td>起始时间:<%= calendar_date_select_tag "case[start_time]",session[:case]["start_time"],:popup => :force %></td>
+      </tr>
+      <tr>
+        <td>运行状态:<%= select :case, :state ,state_options,:selected => session[:case]["state"],:include_blank => true,:size => 15%></td>
+        <td>任务名称:<%= text_field :case, :name,:value => session[:case]["name"],:size => 15 %></td>
+        <td>结束时间:<%= calendar_date_select_tag "case[end_time]",session[:case]["end_time"],:popup => :force %></td>
+        <td><%= submit_tag "搜索" %></td>
+      </tr>
+    </table>
+    <div id="sub_items_case" >
+      <% table(@case_bgjobs, %w{测试用例名称 创建人 运行状态 执行结果 执行ip 添加时间 开始时间 结束时间  操作}) do |f, klass| -%>
+        <tr class="<%= klass %>">
+          <td align="left"><%= f.testcase.title if f.testcase%></td>
+          <td><%= exec_user(f.exec_user_id) rescue "" %></td>
+          <td><%= state_format(f.state) %></td>
+          <td><%= bgjob_result  f %></td>
+          <td><%= f.exec_ip %></td>
+          <td><%= date_format(f.created_at) %></td>
+          <td><%= date_format(f.started_at) %></td>
+          <td><%= date_format(f.done_at) %></td>
+          <td>
+            <%= link_to "删除",{:controller => "auto/bgjobs/",  :action => "cancel", :id => f,:tab=>"testcases",:case => params["case"]}, :confirm=>"确定删除这个任务吗？" if ["waiting", "running"].include? f.state %>
+            <%= link_to "重启",{:controller => "auto/bgjobs/",  :action => "restart", :id => f,:tab=>"testcases",:case => params["case"]}, :confirm=>"确定重启这个任务吗？" if (f.state == "canceled" || (f.state == "done" && f.exec_result.blank?))  %>
+          </td>
+        </tr>
+      <% end %>
+      <%= will_paginate @case_bgjobs,:params => {:tab=>"testcases",:case => session[:case]} %>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,18 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <style>
+      code {
+        background-color: #eee;
+        font-size: 11px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="log">
+      日志详细：
+      <%= copy_text @bgjob.result_log %>
+      <br>
+      <code><%= @bgjob.result_log.gsub("\n", "<br>") rescue '' %></code>
+    </div>
+  </body>
+</html>

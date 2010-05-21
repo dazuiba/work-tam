@@ -1,10 +1,11 @@
+<% html_title  "#{@pm_element.title}(#{@pm_element.name})" %>
 <%= javascript_include_tag '/livetree/live_tree' %>     
                                    
 <% content_for :sidebar do %>
 	 <%= live_tree :element, {
                   :initial_data_root => @element_root,
-                  :initial_data_options => { :depth => 2 },
-                  :initial_data_whole_tree => false,
+                  :initial_data_options => { :depth => 5 },
+                  :initial_data_whole_tree => true,
                   #:css_class => "sidebar_tree",
                   :preload_items => false,
                   :allow_click_branch => true,
@@ -19,6 +20,7 @@
           var loadId = <%= @pm_element.id%>
           element.expandItem(loadId)
           onClickItem(loadId)
+          expandParentsOfItem
       });
   </script>
 <% end %>   

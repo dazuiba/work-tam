@@ -1,0 +1,21 @@
+<% content_for :sidebar do %>
+<h3>用户 </h3>
+<%= sidebar_item "列表" ,{:controller => :users} %>
+<h3> 自动化 </h3>
+<%= sidebar_item "项目" ,{:controller => :projects} %>
+<%= sidebar_item "任务列表" ,{:controller => :task} %>
+<%= sidebar_item "显示测试机" ,{:controller => :machine} %>
+<%= sidebar_item "显示私人机器" ,{:controller => :machine, :type=>"personal"} %>
+<%= sidebar_item "测试机gem包监控" ,{:controller => :machine,:action=>"gem_package_upgrade"} %>
+<%= sidebar_item "测试机host监控" ,{:controller => :machine,:action=>"host_info_read"} %>
+<%= sidebar_item "测试机tns监控" ,{:controller => :machine,:action=>"tns_info_read"} %>
+<h3>知识沉淀 </h3>
+<%= sidebar_item "知识沉淀" , "/map/mind_notes" %>
+<h3>性能监控 </h3>
+<h3> TD银行 </h3>
+<h3>系统设置 </h3>
+<%= sidebar_item "邮件" ,"email" %>
+<%= sidebar_item "旺旺" ,"wangwang" %>
+<%= sidebar_item "数据备份" ,"dbback" %>
+<%= sidebar_item "后台任务" ,"/admin/daemons"%>
+<% end %>

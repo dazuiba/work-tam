@@ -1,3 +1,38 @@
+/**
+ * @author 陈芝俊
+ */
+function selectAll(name){
+	var arr_exec=document.getElementsByName(name);
+    var size=arr_exec.length
+    for(var i=0;i<size;i++){
+      if (!arr_exec[i].checked)
+        arr_exec[i].checked=true
+    }
+}
+
+
+
+//tab content 
+function showTab(name, container) {
+	container = container||"div#content"
+    var f = $$(container+ ' .tab-content');
+	for(var i=0; i<f.length; i++){
+		Element.hide(f[i]);
+	}
+    var f = $$('div.tabs a');
+	for(var i=0; i<f.length; i++){
+		Element.removeClassName(f[i], "selected");
+	}
+	Element.show('tab-content-' + name);
+	Element.addClassName('tab-' + name, "selected");
+	if ($("category_id")){
+		$("category_id").setValue(name)
+	}
+	return false;
+}
+
+
+// PopuoWindow
 (function($){ 		  
 	$.fn.popupWindow = function(instanceSettings){
 		

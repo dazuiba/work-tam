@@ -1,0 +1,31 @@
+<% form_tag({:action=>"create_job"}) do %>
+  <table>
+    <tr>
+      <td>
+        测试用例名称:
+      </td>
+      <td>
+        <%= text_field_tag("title" ,@testcase.title,{:disabled=>true}) %>
+      </td>
+    </tr>
+    <%=hidden_field_tag("testcase_id", @testcase.id) %>
+    <%=hidden_field_tag("target", @target) %>
+    <tr>
+      <td>
+        选择机器:
+      </td>
+      <td>
+        <%= select_machine_tag "exec_ip",nil,:local => true %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        更新脚本:
+      </td>
+      <td>
+        <%= check_box_tag(:is_update_script, 1, checked = true) %>
+      </td>
+    </tr>
+  </table>
+  <%= submit_tag l(:button_save) %>
+<% end %>

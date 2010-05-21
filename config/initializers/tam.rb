@@ -10,7 +10,8 @@ ActiveRecord::Base.send :include,  Pm::TrackVersion
 ActionController::Base.send :include, Acts::Controller::LiveTree
  
 ActiveRecord::Base.send :include,  ActionController::UrlWriter
-              
+
+ActiveRecord::Base.default_url_options = {:host => "localhost", :port=>"3000"}
 
 GLoc.set_config :default_language => :zh
 GLoc.clear_strings
@@ -19,3 +20,6 @@ GLoc.load_localized_strings
 GLoc.set_config(:raise_string_not_found_errors => false)
 include GLoc
 Time::DATE_FORMATS[:stamp] = '%y%m%d%H%M%S'
+
+
+DmConfig.setup_db_pool

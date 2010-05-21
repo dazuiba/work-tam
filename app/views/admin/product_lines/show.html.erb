@@ -1,0 +1,23 @@
+<p>
+  <b>Id:</b>
+  <%=h @product_line.id %>
+</p>
+
+<p>
+  <b>名称:</b>
+  <%=h @product_line.name %>
+</p>
+
+<p>
+  <b>描述:</b>
+  <%=h @product_line.desc %>
+</p>
+
+<p>
+  <b>id_string:</b>
+  <%=h @product_line.id_string %>
+</p>
+
+
+<%= link_to '编辑', edit_admin_product_line_path(@product_line) %> |
+<%= link_to '返回', admin_product_lines_path %>

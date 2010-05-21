@@ -3,7 +3,13 @@ class PmFolder < ActiveRecord::Base
   belongs_to :pm_lib
   acts_as_tree    
   track_version
-  def tree_name; name ; end        
+  def tree_name;
+  	if self.root?
+  		pm_lib.name
+		else
+  	  name 
+  	end   	 
+	end        
   
   def namespaces
     result = ancestors.reverse.push(self)

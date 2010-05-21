@@ -1,0 +1,141 @@
+<script type="text/javascript" charset="utf">
+  function go_search(){
+    document.forms[0].submit();
+  }
+</script>
+<% content_for :sidebar do %>
+  <h3>返回到</h3>
+  <%= link_to_if_authorized  "测试集:[#{@bgjob_suite.testsuite.title}]",
+    auto_testsuite_url(@bgjob_suite.testsuite, :tab=>"logs"),
+    :class => 'icon icon-back',
+    :accesskey => accesskey(:back) %>
+<% end %>
+<style type="text/css" media="screen">
+  span.status {
+    padding: 5px;
+  }
+</style>
+<% tabs = [{:logs => "执行信息"},
+  {:stats => "结果统计"}] %>
+<%= tabs_header(tabs) %>
+<% tab_content(0, tabs) do %>
+  <% form_tag({:action=>"show"}, :method => 'get') do %>
+    <span style="color: red;"><%= @bgjob_suite.testsuite.project.product_line.name rescue "" %>--<%= @bgjob_suite.testsuite.title rescue "" %></span><br>
+    执行结果：
+    <select name="exec_result" onchange="go_search()">
+      <option value=""<%=@exec_result.nil?||@exec_result.empty? ? "selected=true" :  "" %>>全部</option>
+      <option value="passed"<%=@exec_result=="passed" ? "selected=true" : "" %>>passed</option>
+      <option value="failed"<%=@exec_result=="failed" ? "selected=true" : "" %>>failed</option>
+    </select>
+    <input type="hidden" name="id" value=<%=@bgjob_suite.id%>><% end %>
+  <% form_tag({:action=>"confirm"}) do %>
+    <table>
+      <%if @bgjobs.size==0 %>
+        <tr>
+          <td>
+            <p class="nodata">
+              <%= l(:label_no_data) %>
+            </p>
+          <td>
+        </tr>
+      <% else %>
+        <tr>
+          <td align="left">
+            <% if @bgjob_suite.bgjob_category && @bgjob_suite.bgjob_category.report_send %>
+              <font color='red'>
+                报告已经发送
+              </font>
+            <% else %>
+              <%= confirm_state @bgjob_suite %>
+            <% end %>
+          </td>
+        </tr>
+      <%end %>
+    </table>
+    <div id="job-list">
+      <% table(@bgjobs, @arr_header) do |bgjob, klass| -%>
+        <input type="hidden" name="id" value=<%=@bgjob_suite.id%>>
+        <tr class="<%= klass %>">
+          <td>
+            <%= link_to "#{bgjob.testcase.title if bgjob.testcase }",  "#{"/auto/testcases/#{bgjob.testcase.id}/show_testcase" if bgjob.testcase}" %>
+          </td>
+          <td>
+      <%#= link_to_user bgjob.testcase.auto_designer if bgjob.testcase %>
+            <%= bgjob.testcase.script.author if (bgjob.testcase && bgjob.testcase.script) %>
+          </td>
+          <td>
+            <%= bgjob_state bgjob %>
+          </td>
+          <td>
+            <%= bgjob_result bgjob %>
+          </td>
+
+          <% if (@bgjob_suite.confirm_state && @bgjob_suite.confirm_state!=Auto::AutoBgjobSuite::CONFIRM_NOTIFIED)||(@bgjob_suite.bgjob_category && @bgjob_suite.bgjob_category.report_send) %>
+            <% if !bgjob.exec_result.nil? && bgjob.exec_result!="passed" %>
+              <% if  @bgjob_suite.bgjob_category && @bgjob_suite.bgjob_category.report_send %>
+                <td>
+                  <%= bgjob.reason_info %>
+                </td>
+                <td>
+                  <%= bgjob.remark %>
+                </td>
+                <td>
+                  <%= bgjob.checkout_times %>
+                </td>
+                <td>
+                  <%= bgjob.confirm_result %>
+                </td>
+              <% else %>
+              <input type="hidden" name="bgjob_ids[]" value=<%=bgjob.id%>>
+              <td>
+                <%= select_tag "bgjob_reason_info[]", options_for_select(Setting.reason_infos,bgjob.reason_info) %>
+              </td>
+              <td>
+                <%= text_field_tag "bgjob_remark[]",bgjob.remark %>
+              </td>
+              <td>
+                <%= text_field_tag "bgjob_checkout_times[]",bgjob.checkout_times,:size => 1 %>
+              </td>
+              <td>
+                <%= select_tag "bgjob_confirm_result[]", options_for_select(Setting.confirm_results,bgjob.confirm_result) %>
+              </td>
+            <% end %>
+          <%else %>
+            <td colspan=4>
+            </td>
+          <% end %>
+        <% end %>
+        <td>
+          <%= format_time bgjob.started_at %>
+        </td>
+        <td>
+          <%= format_time bgjob.done_at %>
+        </td>
+        <td>
+          <%= bgjob.duration %>
+        </td>
+        <% if !(@bgjob_suite.bgjob_category && @bgjob_suite.bgjob_category.report_send) %>
+          <td>
+            <%= link_to "重启",{:controller => "auto/bgjobs/",  :action => "restart", :id => bgjob}, :confirm=>"确定重启ID为#{bgjob.id}的任务？",:class => 'icon icon-reload' if need_restart?(bgjob) %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+    <%= will_paginate @bgjobs,:params => {:id=>@id,:exec_result =>@exec_result} %>
+    </div>
+  <% end %>
+<% end %>
+<% tab_content(1, tabs) do %>
+  <table>
+    <tr align="left">
+      <td align="left">
+        <img src="<%=auto_bgjob_suites_action_report(@exec_report_data,'测试集执行结果统计')%>">
+      </td>
+      <% if @bgjob_suite.bgjob_category && @bgjob_suite.bgjob_category.report_send %>
+        <td align="right">
+          <img src="<%=auto_bgjob_suites_action_report(@validate_report_data,'测试集验证结果统计')%>">
+        </td>
+      <% end %>
+    </tr>
+  </table>
+<% end %>

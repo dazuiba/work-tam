@@ -1,0 +1,2 @@
+FILE_NAME = File.basename(__FILE__).chomp("_ctl")+".rb"
+require File.dirname(__FILE__)+'/ctrl_helper.rb'

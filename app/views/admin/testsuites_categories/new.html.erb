@@ -1,0 +1,26 @@
+<%= render :partial => 'sidebar', :locals=>local_assigns %>
+<% form_tag({:action=>"create"}) do %>
+  <% index = 0 %>
+  <% table(@testsuites, %w{全选 回归测试集  执行IP   }) do |testsuite, klass| -%>
+    <tr class="<%= klass %>">
+      <td>
+        <% tid = "exec_#{testsuite.id}" %>
+        <input type="checkbox" name="exec[]" id="<%=tid%>" value=<%=index.to_s+"_"+testsuite.id.to_s%> <%= "checked='checked'" if testsuite.checked==1 %> >
+        <br/>
+      </td>
+      <td>
+        <%= text_field_tag("title" ,testsuite.title,{:disabled=>true}) %>
+        <br/>
+      </td>
+      <td>
+        <%= select_machine_tag "exec_ip[]", testsuite.plan_ip,{:required => true,:local => true} %>
+        <br/>
+      </td>
+    </tr>
+    <% index = index+1 %>
+  <% end %>
+  <%= render :partial => "hidden_category" %>
+  <input type="button" onclick="selectAll('exec[]')" value="全选">
+  <input type="button" onclick="save()" value="保存">
+  <%= submit_tag "运行",:onclick => "return checkForm()"%>
+<% end %>

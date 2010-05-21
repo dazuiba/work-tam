@@ -45,7 +45,7 @@ module LiveTreeHelper
       depth = params[:depth] == nil ? nil : params[:depth].to_i
       include_parents = params[:include_parents]
       root_item_id = params[:root_item_id] == nil ? nil : params[:root_item_id].to_i
-
+			
       result = _recurse_live_tree_data(item, depth, get_item_id_proc, get_item_name_proc, get_item_children_proc, get_item_parent_proc)
       if include_parents
          while get_item_parent_proc.call(item) != nil && (root_item_id == nil || get_item_id_proc.call(item) != root_item_id)
@@ -114,8 +114,7 @@ module LiveTreeHelper
          else
             depth = 1
          end
-
-         if options[:initial_data_options] == nil
+				 if options[:initial_data_options] == nil
             data_options_method = controller.method("_#{name}_live_tree_options")
             if data_options_method
                data_options = data_options_method.call

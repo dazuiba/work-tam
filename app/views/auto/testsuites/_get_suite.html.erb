@@ -1,0 +1,12 @@
+<div id="sub_items_suite">
+    <% table(@suite_bgjobs, %w{测试集名称 创建人 运行状态 运行结果 执行ip}) do |f,klass| -%>
+      <tr>
+        <td><%=  testsuite_tilte(f) %></td>
+        <td><%= exec_user(f.exec_user_id) %></td>
+        <td><%= f.state %></td>
+        <td><%= f.progress %></td>
+        <td><%= f.exec_ip %></td>
+      </tr>
+    <% end %>
+    <%= will_paginate @suite_bgjobs%>
+  </div>

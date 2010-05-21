@@ -1,0 +1,33 @@
+<%= error_messages_for 'project' %>
+
+<% if !request.xhr? %>
+	<%= render :partial => "live_check" %>
+<% end  %>
+<div class="box">
+<!--[form:project]-->
+<p>
+	<label for="link_qc">产品线</label><strong><%= @project.product_line.name %></strong>
+</p>
+<p>
+	<%= f.text_field :name, :required => true %><br /><em><%= l(:text_caracters_maximum, 30) %></em></p>
+	<%= f.hidden_field :line_home, :value =>  params[:type] == 'line' %>
+	<%= f.hidden_field :line_id, :value => @project.line_id %>
+	<%= f.hidden_field :project_type%>
+<p>
+	<label for="link_qc">关联QC</label>
+	<%= check_box_tag "link_qc", "true", false%>	
+</p>
+<div id="qc_info" style="display:none;">
+	<p><%= f.text_field :qc_name, :required => true %>
+		<br /><em> QC项目空间的英文名，例如： Auction </em>与自动化svn目录有关
+	</p>
+	<p><%= f.text_field :qc_db, :required => true %>
+			<br /><em>例如： auction_auction_db  </em>
+	</p>
+	<p><%= f.text_field :auto_field_in_qc%>
+			<br /><em>不知道的话就不填</em>
+	</p>
+</div>
+<p><%= f.text_area :description, :rows => 5, :class => 'wiki-edit' %></p>
+</div>
+<!--[eoform:project]-->

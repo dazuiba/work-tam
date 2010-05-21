@@ -1,0 +1,39 @@
+<%= link_to_popup "创建", :action => "new", :type => type  %>
+
+<% table_heads = (type==:auto) ? %w{负责人 名称 IP 是否可用 正在执行} : %w{负责人 名称 IP OS Cpu Mem 位置} %>
+
+<%= will_paginate machine_list, :params=>params.merge(:tab=>type) %>
+<% table(machine_list, table_heads) do |machine, klass| -%>
+  <tr class="<%= klass %>">
+		<td><%= h(machine.owner) %>&nbsp;</td>
+		<td><%= link_to_long_title h(machine.name),{:action => "edit",:id =>machine, :page=>params[:page]},{:popup=>true} %></td>
+		<td><%= h(machine.ip) %></td>
+		<% if type == :auto %>
+			<td>
+				<% if machine.ping_ok == 1 %>
+				   可用
+				<% else %>
+				   不可用
+				<% end %> 
+			</td>
+			<td class="align-left">
+				<% if(locked_by = machine.locked_by).nil?  %>
+					空闲
+				<% elsif locked_by.suite.nil? %>
+					任务:<%= link_to_popup "##{locked_by.id} #{locked_by.testcase.title}", "/auto/bgjobs/#{locked_by.id}/log " %>
+					<% else %>
+					任务&nbsp;&nbsp;:<%= link_to_popup "##{locked_by.id} #{locked_by.testcase.title}", "/auto/bgjobs/#{locked_by.id}/log " %><br/>
+					执行集:<%= link_to_popup "##{locked_by.id} #{locked_by.suite.title}", "/auto/bgjob_suites/#{locked_by.suite.id} "%>
+				<% end %>
+			</td>
+		<% else %>
+			<td><%= long_text machine.os %></td>
+			<td><%= long_text machine.cpu %></td>
+			<td><%= long_text machine.mem %></td>
+			<td><%= long_text machine.position%></td>
+		<% end %>
+		
+  </tr>
+<% end %>
+
+<%= will_paginate machine_list, :params=>params.merge(:tab=>type) %>
